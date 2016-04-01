@@ -15,6 +15,7 @@ public class BitCoinSystem {
      * @param args the command line arguments
      */
     
+    //comentario de teste
     public static void main(String[] args) {
         // TODO code application logic here
     }
