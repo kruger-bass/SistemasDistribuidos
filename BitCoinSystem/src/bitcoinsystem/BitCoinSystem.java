@@ -5,7 +5,11 @@
  */
 package bitcoinsystem;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -24,12 +28,17 @@ public class BitCoinSystem {
     int port;
     int multiport = 6789;
     BitcoinGUI gui;
-    MessagePacket packet;
+    MessagePacket outPacket, inPacket;
     Scanner scan = new Scanner(System.in);
+    
+    ByteArrayOutputStream byteArrayOS;
+    ObjectOutputStream objectOS;
+    ByteArrayInputStream byteArrayIS;
+    ObjectInputStream objectIS;
     
     public BitCoinSystem(){
         
-        System.out.println("Digite a porta que deseja usar: ");
+        System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
         
         
@@ -47,29 +56,69 @@ public class BitCoinSystem {
     public void announceEntry(){
         
         MulticastSocket s = null;
-        
+        outPacket = new MessagePacket(HELLO, port);
+        inPacket = new MessagePacket();
 		try {
 			InetAddress group = InetAddress.getByName("224.0.0.10");
 			s = new MulticastSocket(multiport);
 			s.joinGroup(group);
                         
- 			byte [] m = ByteBuffer.allocate(4).putInt(HELLO).array();
+                        
+ 			byte [] m = getOutputStream(outPacket);
+                     
+                        
 			DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
 			s.send(messageOut);	
                         
 			byte[] buffer = new byte[1000];
-                     DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
-                     s.receive(getPacket);
+                        
+                        for(int i = 0;i<4;i++){
+                            DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
+                            s.receive(getPacket);
 
-                     ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
-                     int received = wrapped.getInt();
-                     System.out.println("Received: " + new String(getPacket.getData()) + ": da porta " + getPacket.getPort());
-                        		
+                            ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
+                            
+                            inPacket = getInputStream(wrapped.array());
+                            
+                            System.out.println("Received: " + inPacket.messageID + ": do usuário da porta " + inPacket.userID);
+                        }
+                        
+                        
 		}catch (SocketException e){System.out.println("Socket: " + e.getMessage());
 		}catch (IOException e){System.out.println("IO: " + e.getMessage());
 		}finally {if(s != null) s.close();}
         
     }
     
+    public byte[] getOutputStream(MessagePacket message){
+        
+        byte[] data = null;
+            try{    
+                byteArrayOS = new ByteArrayOutputStream();
+                objectOS = new ObjectOutputStream(byteArrayOS);
+                
+                objectOS.writeObject(message);
+                data = byteArrayOS.toByteArray();
+            }catch(Exception e){
+                System.out.println("Error in getOutputStream");
+            }
+        
+        return data;
+    }
     
+    public MessagePacket getInputStream(byte[] data){
+        
+        MessagePacket packet = null;
+            try {
+                    byteArrayIS = new ByteArrayInputStream(data);
+                    objectIS = new ObjectInputStream(byteArrayIS);
+                    
+                    packet = (MessagePacket) objectIS.readObject();
+                    //System.out.println("Message received = "+packet.messageID);
+                } catch (Exception e) {
+                    System.out.println("Error in getInputStream");
+                }
+        
+        return packet;
+    }
 }
