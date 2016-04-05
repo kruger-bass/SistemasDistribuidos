@@ -25,6 +25,7 @@ import java.util.Scanner;
 public class BitCoinSystem {
     
     public static final int HELLO = 101;
+    public static final int WELCOME = 102;
     int port;
     int multiport = 6789;
     BitcoinGUI gui;
@@ -52,7 +53,7 @@ public class BitCoinSystem {
     }
     
     
-    //método para dar oi quando entra
+    //incompleto
     public void announceEntry(){
         
         MulticastSocket s = null;
@@ -81,12 +82,30 @@ public class BitCoinSystem {
                             inPacket = getInputStream(wrapped.array());
                             
                             System.out.println("Received: " + inPacket.messageID + ": do usuário da porta " + inPacket.userID);
+                            
+                            if(inPacket.messageID == WELCOME){
+                                //adiciona info no ledger
+                                break;
+                            }
                         }
                         
+                            System.out.println("Há pelo menos 4 usuários no sistema");
                         
 		}catch (SocketException e){System.out.println("Socket: " + e.getMessage());
 		}catch (IOException e){System.out.println("IO: " + e.getMessage());
 		}finally {if(s != null) s.close();}
+        
+    }
+    
+    
+    //método para mandar bitcoins
+    public void sendBitcoin(int port, int value){
+        
+    }
+    
+    
+    //método para minerar bitcoins
+    public void validateTransaction(int transID){
         
     }
     
