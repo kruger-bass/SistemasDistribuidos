@@ -81,7 +81,9 @@ public class BitCoinSystem {
                             
                             inPacket = getInputStream(wrapped.array());
                             
-                            System.out.println("Received: " + inPacket.messageID + ": do usuário da porta " + inPacket.userID);
+                            System.out.println("Received: " + inPacket.messageID + ": do usuário da porta " + inPacket.portID);
+                            
+                            //adiciona no ledger
                             
                             if(inPacket.messageID == WELCOME){
                                 //adiciona info no ledger

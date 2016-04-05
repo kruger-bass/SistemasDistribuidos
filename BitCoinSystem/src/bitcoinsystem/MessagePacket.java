@@ -4,11 +4,6 @@
  */
 package bitcoinsystem;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -18,11 +13,13 @@ import java.io.Serializable;
 public class MessagePacket implements Serializable{
     
     int messageID;
-    int userID;
+    int portID;
+    int publicKey;
+    int price;
     
     public MessagePacket(int mid, int uid){
         this.messageID = mid;
-        this.userID = uid;
+        this.portID = uid;
     }
     
     public MessagePacket(){}
