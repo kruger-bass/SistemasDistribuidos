@@ -7,13 +7,18 @@ package bitcoinsystem;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
 
@@ -103,6 +108,17 @@ public class BitCoinSystem {
     //método para mandar bitcoins
     public void sendBitcoin(int port, int value){
         
+        // Abre o socket para esta transação
+        Socket s = null;
+        try
+        {
+            s = new Socket("127.0.0.1", port);
+        }
+        catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
+        catch (IOException e){System.out.println("readline:"+e.getMessage());}
+        finally {if(s!=null) try {s.close();}catch (IOException e){System.out.println("close:"+e.getMessage());}}
+        // Socket fechado
+        
     }
     
     
@@ -141,5 +157,28 @@ public class BitCoinSystem {
                 }
         
         return packet;
+    }
+    
+    // Métodos que mandam mensagens unicast no localHost    
+    public void SendUnicast (Socket CommSocket, String payload) {
+		// arguments supply message and hostname
+		try{
+                            DataOutputStream out =new DataOutputStream( CommSocket.getOutputStream());
+                            out.writeUTF(payload);
+		}catch (IOException e){System.out.println("readline:"+e.getMessage());
+		}
+     }
+    
+    public String ReceiveUnicast (Socket CommSocket)
+    {
+        String data = null;
+    		try{
+                            DataInputStream in = new DataInputStream( CommSocket.getInputStream());
+                            data = in.readUTF();	    // read a line of data from the stream
+                            System.out.println("Received: "+ data) ; 
+		}catch (EOFException e){System.out.println("EOF:"+e.getMessage());
+		}catch (IOException e){System.out.println("readline:"+e.getMessage());
+		}
+                return data;
     }
 }
