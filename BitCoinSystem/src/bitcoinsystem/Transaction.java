@@ -11,8 +11,16 @@ package bitcoinsystem;
 public class Transaction {
     
     int senderPort;
-    int receiverPort;
+    int receiverPort; //receiver port 6789 é recompensa de mineração
     int value;
-    int timestamp;
+    long timestamp;
     
+    public Transaction(){}
+    
+    public Transaction(int sp, int rp, int v, long t){
+        this.senderPort = sp;
+        this.receiverPort = rp;
+        this.value = v;
+        this.timestamp = t;
+    }
 }
