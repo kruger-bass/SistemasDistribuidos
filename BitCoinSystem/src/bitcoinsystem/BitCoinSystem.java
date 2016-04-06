@@ -21,6 +21,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,16 +33,27 @@ public class BitCoinSystem {
     
     public static final int HELLO = 101;
     public static final int WELCOME = 102;
+    public static final int VALIDATE = 103;
+    public static final int REWARDPORT = 6789;
+    public static final int REWARDVALUE = 1;
+    
     int port;
     int multiport = 6789;
-    BitcoinGUI gui;
-    MessagePacket outPacket, inPacket;
-    Scanner scan = new Scanner(System.in);
+    MulticastSocket s = null;
+    InetAddress group;
     
+    MessagePacket outPacket, inPacket;
     ByteArrayOutputStream byteArrayOS;
     ObjectOutputStream objectOS;
     ByteArrayInputStream byteArrayIS;
     ObjectInputStream objectIS;
+    
+    Scanner scan = new Scanner(System.in);
+    Ledger ledger = new Ledger();
+    Transaction reward = new Transaction();
+    BitcoinGUI gui;
+    long time;
+    
     
     public BitCoinSystem(){
         
@@ -54,6 +67,15 @@ public class BitCoinSystem {
         catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
         catch (IOException e){System.out.println("readline:"+e.getMessage());}
         
+        time = System.currentTimeMillis();
+        System.out.println(time);
+        try {
+            group = InetAddress.getByName("224.0.0.10");
+            s = new MulticastSocket(multiport);
+            s.joinGroup(group);
+        } catch (Exception e) {
+            System.out.println("Error in setting multicast socket");
+        }
         gui = new BitcoinGUI(this);
         announceEntry();
     }
@@ -66,53 +88,35 @@ public class BitCoinSystem {
     //incompleto
     public void announceEntry(){
         
-        MulticastSocket s = null;
         outPacket = new MessagePacket(HELLO, port);
-        inPacket = new MessagePacket();
-		try {
-			InetAddress group = InetAddress.getByName("224.0.0.10");
-			s = new MulticastSocket(multiport);
-			s.joinGroup(group);
-                        
-                        
- 			byte [] m = getOutputStream(outPacket);
-                     
-                        
-			DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
-			s.send(messageOut);	
-                        
-			byte[] buffer = new byte[1000];
-                        
-                        for(int i = 0;i<4;i++){
-                            DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
-                            s.receive(getPacket);
-
-                            ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
-                            
-                            inPacket = getInputStream(wrapped.array());
-                            
-                            System.out.println("Received: " + inPacket.messageID + ": do usuário da porta " + inPacket.portID);
-                            
-                            //adiciona no ledger
-                            
-                            if(inPacket.messageID == WELCOME){
-                                //adiciona info no ledger
-                                break;
-                            }
-                        }
-                        
-                            System.out.println("Há pelo menos 4 usuários no sistema");
-                        
-		}catch (SocketException e){System.out.println("Socket: " + e.getMessage());
-		}catch (IOException e){System.out.println("IO: " + e.getMessage());
-		}finally {if(s != null) s.close();}
+        sendMulticast(outPacket);
         
+        for(int i=0;i<4;i++){
+            inPacket = receiveMulticast();
+            
+            if(inPacket.messageID == HELLO){
+                ledger.addUser(inPacket);
+                System.out.println("Recebido uma mensagem de Olá");
+                if(i == 3){
+                    System.out.println("4 usuários no sistema, enviando Boas-Vindas.");
+                    outPacket = new MessagePacket(WELCOME, ledger);
+                    //envia o WELCOME via unicast
+                }
+            }
+            
+            if(inPacket.messageID == WELCOME){
+                System.out.println("Recebido uma mensagem de Boas-Vindas");
+                ledger = inPacket.ledger;
+                break;
+            }
+        }
+        System.out.println("Finalizado anúncio de entrada.");
     }
     
     
     //método para mandar bitcoins
-    public void BitcoinTransaction(int port, int value){
-        
+    public void sendBitcoin(int port, int value){
+         
         // Abre o socket para esta transação
         Socket s = null;
         try
@@ -130,6 +134,50 @@ public class BitCoinSystem {
     //método para minerar bitcoins
     public void validateTransaction(int transID){
         
+        if(ledger.transactionWaitingList.containsKey(transID)){
+        
+            ledger.confirmTransaction(transID);
+            
+            time = (int)System.currentTimeMillis();
+            reward = new Transaction(port, REWARDPORT, REWARDVALUE, time);
+            outPacket = new MessagePacket(VALIDATE, reward, transID);
+            
+            sendMulticast(outPacket);
+        }
+    }
+    
+    
+    public void sendMulticast(MessagePacket message){
+    
+        try {
+ 			byte [] m = getOutputStream(message);
+			DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
+			s.send(messageOut);	
+                        
+        }catch (SocketException e){System.out.println("Socket: " + e.getMessage());
+	 }catch (IOException e){System.out.println("IO: " + e.getMessage());
+	 }catch (Exception e){System.out.println("Error in sendMulticast");
+        }
+    }
+    
+    public MessagePacket receiveMulticast(){
+    
+       
+        try {
+            byte[] buffer = new byte[1000];
+                        
+            DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
+            s.receive(getPacket);
+            ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
+                            
+            inPacket = getInputStream(wrapped.array());
+                            
+        } catch (Exception e) {
+            System.out.println("Error in receiveMulticast");
+        }
+        
+        return inPacket;
+
     }
     
     public byte[] getOutputStream(MessagePacket message){
