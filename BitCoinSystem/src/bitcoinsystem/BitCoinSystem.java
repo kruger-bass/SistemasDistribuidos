@@ -46,8 +46,13 @@ public class BitCoinSystem {
         
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
-        
-        
+        Socket s = null;
+        try
+        {
+            s = new Socket("127.0.0.1", port);
+        }
+        catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
+        catch (IOException e){System.out.println("readline:"+e.getMessage());}
         
         gui = new BitcoinGUI(this);
         announceEntry();
@@ -106,7 +111,7 @@ public class BitCoinSystem {
     
     
     //método para mandar bitcoins
-    public void sendBitcoin(int port, int value){
+    public void BitcoinTransaction(int port, int value){
         
         // Abre o socket para esta transação
         Socket s = null;
@@ -181,4 +186,6 @@ public class BitCoinSystem {
 		}
                 return data;
     }
+    
+    // TODO: thread that keeps listening on PORT, them reads and resolves that message.
 }
