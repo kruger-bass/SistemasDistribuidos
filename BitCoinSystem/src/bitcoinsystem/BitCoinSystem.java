@@ -66,13 +66,11 @@ public class BitCoinSystem {
         }
         catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
         catch (IOException e){System.out.println("readline:"+e.getMessage());}
-        
-        time = System.currentTimeMillis();
-        System.out.println(time);
+        MulticastSocket m = null;
         try {
             group = InetAddress.getByName("224.0.0.10");
-            s = new MulticastSocket(multiport);
-            s.joinGroup(group);
+            m = new MulticastSocket(multiport);
+            m.joinGroup(group);
         } catch (Exception e) {
             System.out.println("Error in setting multicast socket");
         }
