@@ -20,6 +20,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,8 @@ public class BitCoinSystem {
     
     int port;
     int multiport = 6789;
-    MulticastSocket s = null;
+    Socket s = null;
+    MulticastSocket m = null;
     InetAddress group;
     
     MessagePacket outPacket, inPacket;
@@ -53,27 +56,27 @@ public class BitCoinSystem {
     Transaction reward = new Transaction();
     BitcoinGUI gui;
     long time;
+    int price;
     
     
     public BitCoinSystem(){
         
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
-        Socket s = null;
+
+        
+        System.out.println("Digite qual o preço do seu produto: ");
+        price = scan.nextInt();
+        
         try
         {
             s = new Socket("127.0.0.1", port);
-        }
-        catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
-        catch (IOException e){System.out.println("readline:"+e.getMessage());}
-        MulticastSocket m = null;
-        try {
             group = InetAddress.getByName("224.0.0.10");
             m = new MulticastSocket(multiport);
             m.joinGroup(group);
-        } catch (Exception e) {
-            System.out.println("Error in setting multicast socket");
-        }
+        }catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
+        catch (IOException e){System.out.println("readline:"+e.getMessage());}
+        
         gui = new BitcoinGUI(this);
         announceEntry();
     }
@@ -86,7 +89,7 @@ public class BitCoinSystem {
     //incompleto
     public void announceEntry(){
         
-        outPacket = new MessagePacket(HELLO, port);
+        outPacket = new MessagePacket(HELLO, port, price);
         sendMulticast(outPacket);
         
         for(int i=0;i<4;i++){
@@ -99,6 +102,14 @@ public class BitCoinSystem {
                     System.out.println("4 usuários no sistema, enviando Boas-Vindas.");
                     outPacket = new MessagePacket(WELCOME, ledger);
                     //envia o WELCOME via unicast
+                    
+                    Iterator it = ledger.userList.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        System.out.println(pair.getKey() + " = " + pair.getValue());
+                        
+                        //sendUnicast(pair.getKey(), outPacket);
+                    }
                 }
             }
             
@@ -116,7 +127,6 @@ public class BitCoinSystem {
     public void sendBitcoin(int port, int value){
          
         // Abre o socket para esta transação
-        Socket s = null;
         try
         {
             s = new Socket("127.0.0.1", port);
@@ -136,7 +146,7 @@ public class BitCoinSystem {
         
             ledger.confirmTransaction(transID);
             
-            time = (int)System.currentTimeMillis();
+            time = System.currentTimeMillis();
             reward = new Transaction(port, REWARDPORT, REWARDVALUE, time);
             outPacket = new MessagePacket(VALIDATE, reward, transID);
             
@@ -150,7 +160,7 @@ public class BitCoinSystem {
         try {
  			byte [] m = getOutputStream(message);
 			DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
-			s.send(messageOut);	
+			this.m.send(messageOut);	
                         
         }catch (SocketException e){System.out.println("Socket: " + e.getMessage());
 	 }catch (IOException e){System.out.println("IO: " + e.getMessage());
@@ -165,7 +175,7 @@ public class BitCoinSystem {
             byte[] buffer = new byte[1000];
                         
             DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
-            s.receive(getPacket);
+            m.receive(getPacket);
             ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
                             
             inPacket = getInputStream(wrapped.array());
@@ -211,7 +221,7 @@ public class BitCoinSystem {
     }
     
     // Métodos que mandam mensagens unicast no localHost    
-    public void SendUnicast (Socket CommSocket, String payload) {
+    public void sendUnicast (Socket CommSocket, String payload) {
 		// arguments supply message and hostname
 		try{
                             DataOutputStream out =new DataOutputStream( CommSocket.getOutputStream());
@@ -220,7 +230,7 @@ public class BitCoinSystem {
 		}
      }
     
-    public String ReceiveUnicast (Socket CommSocket)
+    public String receiveUnicast (Socket CommSocket)
     {
         String data = null;
     		try{

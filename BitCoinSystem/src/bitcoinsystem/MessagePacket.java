@@ -20,9 +20,10 @@ public class MessagePacket implements Serializable{
     Ledger ledger = null;
     Transaction trans = null;
     
-    public MessagePacket(int mid, int uid){
+    public MessagePacket(int mid, int uid, int p){
         this.messageID = mid;
         this.portID = uid;
+        this.price = p;
     }
     
     public MessagePacket(int mid, Ledger led){
