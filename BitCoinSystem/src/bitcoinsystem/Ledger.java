@@ -4,13 +4,14 @@
  */
 package bitcoinsystem;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author Marmota
  */
-public class Ledger {
+public class Ledger implements Serializable{
     
     //transaction ID, and transaction
      HashMap<Integer, Transaction> transactionList = new HashMap<Integer, Transaction>();

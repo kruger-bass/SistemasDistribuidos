@@ -15,15 +15,16 @@ public class MessagePacket implements Serializable{
     int messageID = 0;
     int portID = 0;
     int publicKey = 0;
-    int price = 0;
+    int userPrice = 0;
     int transID = 0;
+    int purchaseValue = 0;
     Ledger ledger = null;
     Transaction trans = null;
     
     public MessagePacket(int mid, int uid, int p){
         this.messageID = mid;
         this.portID = uid;
-        this.price = p;
+        this.userPrice = p;
     }
     
     public MessagePacket(int mid, Ledger led){
@@ -37,7 +38,14 @@ public class MessagePacket implements Serializable{
         this.transID = tid;
     }
     
-    public MessagePacket(){}
+    public MessagePacket(int mid, int pv){
+        this.messageID = mid;
+        this.purchaseValue = pv;
+    }
+    
+    public MessagePacket(int mid){
+        this.messageID = mid;
+    }
     
     
 }

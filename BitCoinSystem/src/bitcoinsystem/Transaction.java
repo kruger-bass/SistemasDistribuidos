@@ -4,11 +4,13 @@
  */
 package bitcoinsystem;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Marmota
  */
-public class Transaction {
+public class Transaction implements Serializable{
     
     int senderPort;
     int receiverPort; //receiver port 6789 é recompensa de mineração
