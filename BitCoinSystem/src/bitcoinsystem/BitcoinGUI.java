@@ -68,17 +68,12 @@ public class BitcoinGUI extends javax.swing.JFrame {
         jLabel3.setText("Validar Transação de ID:");
 
         transIDLabel.setText("ex:");
-        transIDLabel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                transIDLabelActionPerformed(evt);
-            }
-        });
 
         validateButton.setText("Validar");
 
         sendValue.setText("ex:50");
 
-        jLabel4.setText("para a porta:");
+        jLabel4.setText("bitcoins, para a porta:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,24 +91,24 @@ public class BitcoinGUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(transIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(sendValue, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(sendPortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(transIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel4)))
+                        .addGap(18, 18, 18)
+                        .addComponent(sendPortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(sendButton))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(validateButton)))
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addContainerGap(219, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,10 +146,6 @@ public class BitcoinGUI extends javax.swing.JFrame {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sendButtonActionPerformed
-
-    private void transIDLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transIDLabelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_transIDLabelActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

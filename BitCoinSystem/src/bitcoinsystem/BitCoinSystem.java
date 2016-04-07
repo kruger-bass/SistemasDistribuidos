@@ -41,6 +41,7 @@ public class BitCoinSystem {
     
     int port;
     int multiport = 6789;
+    Socket s = null;
     MulticastSocket m = null;
     InetAddress group;
     
@@ -62,17 +63,20 @@ public class BitCoinSystem {
         
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
+
         
         System.out.println("Digite qual o preço do seu produto: ");
         price = scan.nextInt();
         
-        try {
+        try
+        {
+            s = new Socket("127.0.0.1", port);
             group = InetAddress.getByName("224.0.0.10");
             m = new MulticastSocket(multiport);
             m.joinGroup(group);
-        } catch (Exception e) {
-            System.out.println("Error in setting multicast socket");
-        }
+        }catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
+        catch (IOException e){System.out.println("readline:"+e.getMessage());}
+        
         gui = new BitcoinGUI(this);
         announceEntry();
     }
@@ -123,7 +127,6 @@ public class BitCoinSystem {
     public void sendBitcoin(int port, int value){
          
         // Abre o socket para esta transação
-        Socket s = null;
         try
         {
             s = new Socket("127.0.0.1", port);
@@ -239,4 +242,6 @@ public class BitCoinSystem {
 		}
                 return data;
     }
+    
+    // TODO: thread that keeps listening on PORT, them reads and resolves that message.
 }
