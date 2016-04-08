@@ -15,7 +15,7 @@ import java.security.spec.*;
 public class GenSig {
 
 
-    public KeyPair ultra3000KeyPairGenerator() {
+    public static KeyPair ultra3000KeyPairGenerator() {
        KeyPair pair = null;
        try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -31,7 +31,7 @@ public class GenSig {
         return pair;
     }
     
-    public byte[] SignTransaction(PrivateKey priv, byte[] data)
+    public static byte[] SignTransaction(PrivateKey priv, byte[] data)
     {
         byte [] realSig = null;
         try{
@@ -45,7 +45,7 @@ public class GenSig {
         return realSig;
     }
     
-    public boolean VerifySignature(byte [] data, byte[] signature, PublicKey key)
+    public static boolean VerifySignature(byte [] data, byte[] signature, PublicKey key)
     {
         boolean verifies = false;
         try

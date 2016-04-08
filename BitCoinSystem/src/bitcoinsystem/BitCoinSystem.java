@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.security.*;
+
 
 /**
  *
@@ -63,9 +65,9 @@ public class BitCoinSystem {
     BitcoinGUI gui;
     long time; 
     int price; //price of your products in bitcoins
-    int wallet; //amount of bitocins
+    int wallet; //amount of bitcoins
     int transactionCounter; // used to make transaction ID's
-    
+    KeyPair keyPair = null;
     
     
     public BitCoinSystem(){
@@ -76,6 +78,7 @@ public class BitCoinSystem {
         
         System.out.println("Digite qual o preço do seu produto: ");
         price = scan.nextInt();
+        keyPair = GenSig.ultra3000KeyPairGenerator();
         
         try
         {
@@ -98,7 +101,7 @@ public class BitCoinSystem {
     //incompleto
     public void announceEntry(){
         
-        outPacket = new MessagePacket(HELLO, port, price);
+        outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic());
         sendMulticast(outPacket);
         
         for(int i=0;i<4;i++){
@@ -159,7 +162,7 @@ public class BitCoinSystem {
             // colocar a chave publica do sender
             
             time = System.currentTimeMillis();
-            reward = new Transaction(port, REWARDPORT, REWARDVALUE, time);
+            reward = new Transaction(port, REWARDPORT, REWARDVALUE, time );
             outPacket = new MessagePacket(VALIDATE, reward, transID);
             
             sendMulticast(outPacket);

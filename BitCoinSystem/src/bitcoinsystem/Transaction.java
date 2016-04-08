@@ -5,6 +5,9 @@
 package bitcoinsystem;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.security.*;
+
 
 /**
  *
