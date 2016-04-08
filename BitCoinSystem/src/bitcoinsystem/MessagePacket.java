@@ -8,11 +8,12 @@ import java.io.Serializable;
 import java.security.PublicKey;
 
 /**
- *
+ * Classe genérica para mensagens
  * @author Marmota
  */
 public class MessagePacket implements Serializable{
     
+    // Todas as variáveis utilizadas pelas nossas mensagens
     int messageID = 0;
     int portID = 0;
     int userPrice = 0;

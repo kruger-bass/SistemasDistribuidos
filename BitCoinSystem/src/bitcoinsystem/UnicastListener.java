@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Classe que implementa um listener TCP
  * @author Marmota
  */
 public class UnicastListener extends Thread{
@@ -27,6 +27,7 @@ public class UnicastListener extends Thread{
     BitCoinSystem mainClass;
     ServerSocket serverSocket;
     
+    // Construtor do listener
 	public UnicastListener (int port, BitCoinSystem bcs) {
             
 		try{
@@ -37,7 +38,7 @@ public class UnicastListener extends Thread{
 		} catch(IOException e) {System.out.println("Listen socket:"+e.getMessage());}
 	}
         
-       public void run(){
+       public void run(){ // O listener lança uma classe para tratar cada conexão individualmente
        
            try{
 			while(true) {
@@ -48,6 +49,7 @@ public class UnicastListener extends Thread{
        }
 }
 
+// Classe que trata cada conexão TCP
 class Connection extends Thread {
 	DataInputStream in;
 	DataOutputStream out;
@@ -110,11 +112,7 @@ class Connection extends Thread {
                 }
 	}
         
-       /**
-        * 
-        * 
-        * @param message 
-        */
+       //Método que cria transação
        public void requestTransactionHandler(MessagePacket message){
            
            transaction = new Transaction(message.portID, mainClass.port, message.purchaseValue, System.currentTimeMillis());
@@ -125,6 +123,7 @@ class Connection extends Thread {
            System.out.println(message.portID);
        }
        
+       // Método que assina transação
        public void transactionHandler(MessagePacket message){
            
            byte[] signature = GenSig.SignTransaction(mainClass.keyPair.getPrivate(), mainClass.getTransactionOutputStream(message.trans));
@@ -136,6 +135,7 @@ class Connection extends Thread {
            System.out.println("th");
        }
        
+       // método que recebe o banco de dados distribuído.
        public void welcomeHandler(MessagePacket message){
            
            mainClass.ledger = message.ledger;

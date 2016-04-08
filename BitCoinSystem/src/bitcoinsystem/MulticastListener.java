@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
+ * Listener do grupo Multicast
  * @author Marmota
  */
 public class MulticastListener extends Thread{
@@ -33,6 +33,7 @@ public class MulticastListener extends Thread{
     MessagePacket inPacket, outPacket;
     InetAddress group;
     
+    // Construtor do listener
 	public MulticastListener (int port, BitCoinSystem bcs) {
             
 		try{
@@ -48,7 +49,7 @@ public class MulticastListener extends Thread{
        public void run(){
        
            try{
-			while(true) {
+			while(true) { // Fique tentando ouvir
 				byte[] buffer = new byte[1000];
                                 System.out.println("debug, initiate multicast listen");
                                 DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
@@ -60,6 +61,7 @@ public class MulticastListener extends Thread{
                                 inPacket = mainClass.getInputStream(wrapped.array());
                                 System.out.println("got this:" + inPacket.messageID);
                                 
+                                // Separa a mensagem ouvida em vários pedaços
                                 if(inPacket.messageID == mainClass.HELLO){
 
                                     helloHandler(inPacket);
@@ -78,13 +80,14 @@ public class MulticastListener extends Thread{
 		} catch(IOException e) {System.out.println("Listen socket:"+e.getMessage());}
        }
        
+       // função que trata a mensagem Hello
        public void helloHandler(MessagePacket message){
            
-           if(mainClass.applicationStarted == true){
+           if(mainClass.applicationStarted == true){ // Se o sistema já está funcionando
                System.out.println("toaqui");
                 outPacket = new MessagePacket(mainClass.WELCOME, mainClass.ledger);
                 mainClass.sendUnicast(message.portID, outPacket);
-           } else {
+           } else { // Se o sistema ainda está começando
                System.out.println("tolah");
                //mainClass.trueReceivedSignal(message);
                mainClass.ledger.addUser(message);
@@ -110,6 +113,7 @@ public class MulticastListener extends Thread{
            }
        }
        
+       // Manipula mensagem de transação
        public void confirmTransactionHandler(MessagePacket message){
            
            System.out.println("transIDID:" + message.transID);
@@ -117,6 +121,7 @@ public class MulticastListener extends Thread{
            
        }
        
+       // Manipula mensagem de transação confirmada
        public void validateHandler(MessagePacket message){
        
            mainClass.ledger.transactionConfirmed(message.transID);

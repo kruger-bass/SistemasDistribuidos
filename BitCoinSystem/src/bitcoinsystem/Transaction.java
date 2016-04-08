@@ -10,13 +10,13 @@ import java.security.*;
 
 
 /**
- *
+ * Implementa a classe de transação.
  * @author Marmota
  */
 public class Transaction implements Serializable{
     
-    int senderPort;
-    int receiverPort; 
+    int senderPort; // Comprador com bitcoins
+    int receiverPort; // Vendedor de um produto
     int value;
     long timestamp;
     

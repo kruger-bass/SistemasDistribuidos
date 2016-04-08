@@ -16,6 +16,7 @@ public class GenSig implements Serializable{
     
     public GenSig(){}
 
+    // Gera par de chaves usando RSA 1024 bits
     public static KeyPair ultra3000KeyPairGenerator() {
        KeyPair pair = null;
        try {
@@ -32,6 +33,7 @@ public class GenSig implements Serializable{
         return pair;
     }
     
+    // Assina uma transação
     public static byte[] SignTransaction(PrivateKey priv, byte[] data)
     {
         byte [] realSig = null;
@@ -46,6 +48,7 @@ public class GenSig implements Serializable{
         return realSig;
     }
     
+    // Verifica se uma assinatura corresponde a uma transação e um processo.
     public static boolean VerifySignature(byte [] data, byte[] signature, PublicKey key)
     {
         boolean verifies = false;

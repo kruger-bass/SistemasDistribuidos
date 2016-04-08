@@ -37,6 +37,7 @@ import java.security.*;
 
 public class BitCoinSystem {
     
+    //Códigos das mensagens
     public static final int HELLO = 101;
     public static final int WELCOME = 102;
     public static final int VALIDATE = 103;
@@ -47,6 +48,7 @@ public class BitCoinSystem {
     public static final int REWARDVALUE = 1;
     public static final int EXTRAREWARD = 1;
     
+    // variáveis de rede
     int port;
     int multiport = 6789;
     Socket s = null;
@@ -55,12 +57,14 @@ public class BitCoinSystem {
     MulticastSocket m = null;
     InetAddress group;
     
+    //variáveis de Mensagem
     MessagePacket outPacket, inPacket;
     ByteArrayOutputStream byteArrayOS;
     ObjectOutputStream objectOS;
     ByteArrayInputStream byteArrayIS;
     ObjectInputStream objectIS;
     
+    //Demais variáveis
     Scanner scan = new Scanner(System.in);
     Ledger ledger = new Ledger();
     Transaction reward = new Transaction();
@@ -74,18 +78,18 @@ public class BitCoinSystem {
     boolean receivedSignal = false;
     boolean applicationStarted = false;
     
+    //Inicializa o usuário de bitcoins
     public BitCoinSystem(){
-        
+        // Estado inicial.
         transactionCounter = 0;
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
-
-        
         System.out.println("Digite qual o preço do seu produto: ");
         price = scan.nextInt();
         keyPair = GenSig.ultra3000KeyPairGenerator();
-        
         wallet = 100;
+        
+        //Inícialização da comunicação
         try
         {
             listener = new UnicastListener(port, this);
@@ -94,9 +98,11 @@ public class BitCoinSystem {
             m.joinGroup(group);
         }catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
         catch (IOException e){System.out.println("readline:"+e.getMessage());}
-        
-        gui = new BitcoinGUI(this);
         multiListener = new MulticastListener(multiport, this);
+
+        // Lançando interface com usuário
+        gui = new BitcoinGUI(this);
+        // Iniciar sistema!
         announceEntry();
     }
     
@@ -105,7 +111,7 @@ public class BitCoinSystem {
     }
     
     
-    //para testes, alterar int i e "if i"
+    //Envio da mensagem inicial, com a identificação do usuário
     public void announceEntry(){
         
         outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic()); // pacote de entrada com a public key e preço das moedas
@@ -131,7 +137,7 @@ public class BitCoinSystem {
     public void validateTransaction(int transID){
         System.out.println("dbug validate pre");
         
-        if(ledger.transactionWaitingList.containsKey(transID)){
+        if(ledger.transactionWaitingList.containsKey(transID)){//se existe a transação na lista de espera
             
             System.out.println("dbug validate");
             MessagePacket packet = ledger.transactionWaitingList.get(transID);
@@ -146,23 +152,22 @@ public class BitCoinSystem {
         }
     }
     
-    
+    // Envia mensagem no grupo multicast
     public void sendMulticast(MessagePacket message){
     
         try {
- 			byte [] m = getOutputStream(message);
-			DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
-			this.m.send(messageOut);	
+            byte [] m = getOutputStream(message);
+            DatagramPacket messageOut = new DatagramPacket(m, m.length, group, multiport);
+            this.m.send(messageOut);	
                         
-        }catch (SocketException e){System.out.println("Socket: " + e.getMessage());
+         }catch (SocketException e){System.out.println("Socket: " + e.getMessage());
 	 }catch (IOException e){System.out.println("IO: " + e.getMessage());
 	 }catch (Exception e){System.out.println("Error in sendMulticast");
         }
     }
     
+    // recebe mensagem do grupo multicast
     public MessagePacket receiveMulticast(){
-    
-       
         try {
             byte[] buffer = new byte[1000];
                         
@@ -175,11 +180,10 @@ public class BitCoinSystem {
         } catch (Exception e) {
             System.out.println("Error in receiveMulticast");
         }
-        
         return inPacket;
-
     }
     
+    // recebe array de bytes da mensagem
     public byte[] getOutputStream(MessagePacket message){
         
         byte[] data = null;
@@ -196,6 +200,7 @@ public class BitCoinSystem {
         return data;
     }
     
+    // recebe array de bytes da transação
     public byte[] getTransactionOutputStream(Transaction trans){
         
         byte[] data = null;
@@ -212,8 +217,8 @@ public class BitCoinSystem {
         return data;
     }
     
+    // cria mensagem a partir de array de dados
     public MessagePacket getInputStream(byte[] data){
-        
         MessagePacket packet = null;
             try {
                     System.out.println("debug2");
@@ -232,6 +237,7 @@ public class BitCoinSystem {
         return packet;
     }
     
+    // cria transação a partir do array de dados
     public Transaction getTransactionInputStream(byte[] data){
         
         Transaction trans = null;
@@ -260,5 +266,5 @@ public class BitCoinSystem {
                     System.out.println("readline:"+e.getMessage());
 		}
      }
-    // TODO: thread that keeps listening on PORT, them reads and resolves that message.
+    
 }
