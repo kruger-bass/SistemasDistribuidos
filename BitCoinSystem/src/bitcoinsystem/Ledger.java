@@ -5,6 +5,7 @@
 package bitcoinsystem;
 
 import java.io.Serializable;
+import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.HashMap;
 
@@ -14,11 +15,12 @@ import java.util.HashMap;
  */
 public class Ledger implements Serializable{
     
-    //transaction ID, and transaction
-     HashMap<Integer, Transaction> transactionList = new HashMap<Integer, Transaction>();
+    
+    //transaction ID, and packet with all info on transaction
+     HashMap<Integer, MessagePacket> transactionList = new HashMap<Integer, MessagePacket>();
      
-     //transaction ID, and transaction
-     HashMap<Integer, Transaction> transactionWaitingList = new HashMap<Integer, Transaction>();
+     //transaction ID, and pacote with all info on transaction
+     HashMap<Integer, MessagePacket> transactionWaitingList = new HashMap<Integer, MessagePacket>();
      
      //portID, message packet
      HashMap<Integer, MessagePacket> userList = new HashMap<Integer, MessagePacket>();
@@ -27,14 +29,18 @@ public class Ledger implements Serializable{
      public Ledger(){
      }
      
-     public void confirmTransaction(int transID, PublicKey pk){
-         transactionList.put(transID, transactionWaitingList.get(transID));
-         transactionWaitingList.remove(transID);
-         //verificar assinatura
+     public void confirmTransaction(byte[] data, byte[] signature, PublicKey pk, int transID){
+         boolean verified = GenSig.VerifySignature(data, signature, pk);
+         if(verified){
+            transactionList.put(transID, transactionWaitingList.get(transID));
+            transactionWaitingList.remove(transID);
+         } else{
+             System.out.println("Error: ConfirmTransaction");
+         }
      }
      
-     public void addTransaction(int transID, Transaction trans){
-         transactionWaitingList.put(transID, trans);
+     public void addTransaction(int transID, MessagePacket packet){
+         transactionWaitingList.put(transID, packet);
      }
      
      public void addUser(MessagePacket packet){

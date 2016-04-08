@@ -166,7 +166,10 @@ class Connection extends Thread {
        
        public void transactionHandler(MessagePacket message){
            
-           //assinar transaçao
+           byte[] signature = GenSig.SignTransaction(mainClass.keyPair.getPrivate(), mainClass.getTransactionOutputStream(message.trans));
+           outPacket = new MessagePacket(mainClass.CONFIRMTRANSACTION, message.trans, message.transID, signature);
+           
+           mainClass.sendMulticast(outPacket);
        }
        
        public void welcomeHandler(MessagePacket message){

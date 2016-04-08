@@ -158,8 +158,9 @@ public class BitCoinSystem {
         
         if(ledger.transactionWaitingList.containsKey(transID)){
         
-            //ledger.confirmTransaction(transID);
-            // colocar a chave publica do sender
+            MessagePacket packet = ledger.transactionWaitingList.get(transID);
+            PublicKey pubK = ledger.userList.get(packet.trans.senderPort).publicKey;
+            ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID);
             
             time = System.currentTimeMillis();
             reward = new Transaction(port, REWARDPORT, REWARDVALUE, time );
@@ -219,6 +220,22 @@ public class BitCoinSystem {
         return data;
     }
     
+    public byte[] getTransactionOutputStream(Transaction trans){
+        
+        byte[] data = null;
+            try{    
+                byteArrayOS = new ByteArrayOutputStream();
+                objectOS = new ObjectOutputStream(byteArrayOS);
+                
+                objectOS.writeObject(trans);
+                data = byteArrayOS.toByteArray();
+            }catch(Exception e){
+                System.out.println("Error in getOutputStream");
+            }
+        
+        return data;
+    }
+    
     public MessagePacket getInputStream(byte[] data){
         
         MessagePacket packet = null;
@@ -233,6 +250,22 @@ public class BitCoinSystem {
                 }
         
         return packet;
+    }
+    
+    public Transaction getTransactionInputStream(byte[] data){
+        
+        Transaction trans = null;
+            try {
+                    byteArrayIS = new ByteArrayInputStream(data);
+                    objectIS = new ObjectInputStream(byteArrayIS);
+                    
+                    trans = (Transaction) objectIS.readObject();
+                    //System.out.println("Message received = "+packet.messageID);
+                } catch (Exception e) {
+                    System.out.println("Error in getInputStream");
+                }
+        
+        return trans;
     }
     
     // Métodos que mandam mensagens unicast no localHost    

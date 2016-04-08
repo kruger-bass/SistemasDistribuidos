@@ -13,7 +13,8 @@ import java.security.spec.*;
  * Implements methods that generates a keypair, sign a transaction and verify a transaction.
  */
 public class GenSig {
-
+    
+    public GenSig(){}
 
     public static KeyPair ultra3000KeyPairGenerator() {
        KeyPair pair = null;

@@ -25,7 +25,7 @@ public class MessagePacket implements Serializable{
     
     //user info message
     public MessagePacket(int mid, int uid, int p, PublicKey pk){
-        this.messageID = mid;
+        this.messageID = mid; //Hello
         this.portID = uid;
         this.userPrice = p;
         this.publicKey = pk;
@@ -33,27 +33,30 @@ public class MessagePacket implements Serializable{
     
     //Database message
     public MessagePacket(int mid, Ledger led){
-        this.messageID = mid;
+        this.messageID = mid; //Welcome
         this.ledger = led;
     }
     
     //Transaction Start message
     public MessagePacket(int mid, Transaction t, int tid){
-        this.messageID = mid;
+        this.messageID = mid; //Transaction
         this.trans = t;
         this.transID = tid;
     }
     
     //Purchase Order message
     public MessagePacket(int mid, int pv, int pid){
-        this.messageID = mid;
+        this.messageID = mid; //RequestTransaction
         this.purchaseValue = pv;
         this.portID = pid;
     }
     
-    //Generic 
-    public MessagePacket(int mid){
+    //Transaction Waiting Confirmation
+    public MessagePacket(int mid, Transaction t, int tid, byte[] s){
         this.messageID = mid;
+        this.trans = t;
+        this.transID = tid;
+        this.signature = s;
     }
     
     
