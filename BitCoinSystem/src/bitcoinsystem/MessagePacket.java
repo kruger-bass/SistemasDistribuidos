@@ -5,6 +5,7 @@
 package bitcoinsystem;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 
 /**
  *
@@ -14,17 +15,18 @@ public class MessagePacket implements Serializable{
     
     int messageID = 0;
     int portID = 0;
-    int publicKey = 0;
     int userPrice = 0;
     int transID = 0;
     int purchaseValue = 0;
     Ledger ledger = null;
     Transaction trans = null;
+    PublicKey publicKey= null;
     
-    public MessagePacket(int mid, int uid, int p){
+    public MessagePacket(int mid, int uid, int p, PublicKey pk){
         this.messageID = mid;
         this.portID = uid;
         this.userPrice = p;
+        this.publicKey = pk;
     }
     
     public MessagePacket(int mid, Ledger led){
@@ -38,9 +40,10 @@ public class MessagePacket implements Serializable{
         this.transID = tid;
     }
     
-    public MessagePacket(int mid, int pv){
+    public MessagePacket(int mid, int pv, int pid){
         this.messageID = mid;
         this.purchaseValue = pv;
+        this.portID = pid;
     }
     
     public MessagePacket(int mid){

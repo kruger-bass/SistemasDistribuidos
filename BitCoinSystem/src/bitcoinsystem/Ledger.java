@@ -5,6 +5,7 @@
 package bitcoinsystem;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 import java.util.HashMap;
 
 /**
@@ -26,9 +27,10 @@ public class Ledger implements Serializable{
      public Ledger(){
      }
      
-     public void confirmTransaction(int transID){
+     public void confirmTransaction(int transID, PublicKey pk){
          transactionList.put(transID, transactionWaitingList.get(transID));
          transactionWaitingList.remove(transID);
+         //verificar assinatura
      }
      
      public void addTransaction(int transID, Transaction trans){

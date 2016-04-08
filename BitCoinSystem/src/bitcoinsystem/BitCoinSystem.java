@@ -37,8 +37,9 @@ public class BitCoinSystem {
     public static final int HELLO = 101;
     public static final int WELCOME = 102;
     public static final int VALIDATE = 103;
-    public static final int PURCHASE = 104;
+    public static final int REQUESTTRANSACTION = 104;
     public static final int TRANSACTION = 105;
+    public static final int CONFIRMTRANSACTION = 106;
     public static final int REWARDPORT = 6789;
     public static final int REWARDVALUE = 1;
     
@@ -59,8 +60,11 @@ public class BitCoinSystem {
     Ledger ledger = new Ledger();
     Transaction reward = new Transaction();
     BitcoinGUI gui;
-    long time;
-    int price;
+    long time; 
+    int price; //price of your products in bitcoins
+    int wallet; //amount of bitocins
+    int transactionCounter; // used to make transaction ID's
+    
     
     
     public BitCoinSystem(){
@@ -136,9 +140,12 @@ public class BitCoinSystem {
     //método para compra com bitcoins
     public void purchase(int port, int value){
          
-        outPacket = new MessagePacket(PURCHASE, value);
-        sendUnicast(port, outPacket);
-        
+        if(value <= wallet){
+            outPacket = new MessagePacket(REQUESTTRANSACTION, value, port);
+            sendUnicast(port, outPacket);
+        } else{
+            System.out.println("Error: Insufficient bitcoin to begin purchase");
+        }
     }
     
     
@@ -147,7 +154,8 @@ public class BitCoinSystem {
         
         if(ledger.transactionWaitingList.containsKey(transID)){
         
-            ledger.confirmTransaction(transID);
+            //ledger.confirmTransaction(transID);
+            // colocar a chave publica do sender
             
             time = System.currentTimeMillis();
             reward = new Transaction(port, REWARDPORT, REWARDVALUE, time);

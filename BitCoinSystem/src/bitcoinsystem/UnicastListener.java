@@ -101,6 +101,7 @@ class Connection extends Thread {
        ObjectInputStream objectIS;
        
        BitCoinSystem mainClass;
+       Transaction transaction;
        
 	public Connection (Socket aClientSocket, BitCoinSystem bcs) {
 		try {
@@ -122,6 +123,21 @@ class Connection extends Thread {
                      
                      inPacket = mainClass.getInputStream(data);
                      System.out.println(inPacket.messageID);
+                     
+                     if(inPacket.messageID == mainClass.REQUESTTRANSACTION){
+                         
+                         requestTransactionHandler(inPacket);
+                         
+                     } else if(inPacket.messageID == mainClass.TRANSACTION){
+                         
+                         transactionHandler(inPacket);
+                         
+                     } else if(inPacket.messageID == mainClass.WELCOME){
+                         
+                         welcomeHandler(inPacket);
+                         
+                     }
+                     
 		}catch (EOFException e){System.out.println("EOF:"+e.getMessage());
 		} catch(IOException e) {System.out.println("readline:"+e.getMessage());
 		} finally{ 
@@ -135,14 +151,26 @@ class Connection extends Thread {
 
 	}
         
-        
-       public void purchaseHandler(){
+       /**
+        * 
+        * 
+        * @param message 
+        */
+       public void requestTransactionHandler(MessagePacket message){
            
-           
+           transaction = new Transaction(message.portID, mainClass.port, message.purchaseValue, System.currentTimeMillis());
+           outPacket = new MessagePacket(mainClass.TRANSACTION, transaction, ((mainClass.port*100) + mainClass.transactionCounter));
+           mainClass.transactionCounter++;
+           mainClass.sendUnicast(message.portID, message);
        }
        
-       public void welcomeHandler(){
+       public void transactionHandler(MessagePacket message){
            
+           //assinar transaçao
+       }
+       
+       public void welcomeHandler(MessagePacket message){
            
+           mainClass.ledger = message.ledger;
        }
 }
