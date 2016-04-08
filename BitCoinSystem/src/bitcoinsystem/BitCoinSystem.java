@@ -50,6 +50,7 @@ public class BitCoinSystem {
     int multiport = 6789;
     Socket s = null;
     UnicastListener listener = null;
+    MulticastListener multiListener = null;
     MulticastSocket m = null;
     InetAddress group;
     
@@ -72,6 +73,7 @@ public class BitCoinSystem {
     
     public BitCoinSystem(){
         
+        transactionCounter = 0;
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
 
@@ -80,6 +82,7 @@ public class BitCoinSystem {
         price = scan.nextInt();
         keyPair = GenSig.ultra3000KeyPairGenerator();
         
+        wallet = 100;
         try
         {
             listener = new UnicastListener(port, this);
@@ -91,6 +94,7 @@ public class BitCoinSystem {
         
         gui = new BitcoinGUI(this);
         announceEntry();
+        multiListener = new MulticastListener(multiport, this);
     }
     
     public static void main(String[] args) {
@@ -110,7 +114,7 @@ public class BitCoinSystem {
             if(inPacket.messageID == HELLO){
                 ledger.addUser(inPacket);
                 System.out.println("Recebido uma mensagem de Olá");
-                if(i == 3){
+                if(i == 1){
                     System.out.println("4 usuários no sistema, enviando Boas-Vindas.");
                     outPacket = new MessagePacket(WELCOME, ledger);
                     //envia o WELCOME via unicast
@@ -145,7 +149,7 @@ public class BitCoinSystem {
     public void purchase(int port, int value){
          
         if(value <= wallet){
-            outPacket = new MessagePacket(REQUESTTRANSACTION, value, port);
+            outPacket = new MessagePacket(REQUESTTRANSACTION, value, this.port);
             sendUnicast(port, outPacket);
         } else{
             System.out.println("Error: Insufficient bitcoin to begin purchase");
@@ -155,9 +159,11 @@ public class BitCoinSystem {
     
     //método para minerar bitcoins
     public void validateTransaction(int transID){
+        System.out.println("dbug validate pre");
         
         if(ledger.transactionWaitingList.containsKey(transID)){
-        
+            
+            System.out.println("dbug validate");
             MessagePacket packet = ledger.transactionWaitingList.get(transID);
             PublicKey pubK = ledger.userList.get(packet.trans.senderPort).publicKey;
             ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID);
@@ -240,11 +246,15 @@ public class BitCoinSystem {
         
         MessagePacket packet = null;
             try {
+                    System.out.println("debug2");
                     byteArrayIS = new ByteArrayInputStream(data);
                     objectIS = new ObjectInputStream(byteArrayIS);
-                    
+                    System.out.println("debug1");
                     packet = (MessagePacket) objectIS.readObject();
+                    System.out.println("debug0");
                     //System.out.println("Message received = "+packet.messageID);
+                } catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());
+                } catch (IOException e){System.out.println("readline:"+e.getMessage());
                 } catch (Exception e) {
                     System.out.println("Error in getInputStream");
                 }

@@ -39,6 +39,12 @@ public class Ledger implements Serializable{
          }
      }
      
+     public void transactionConfirmed(int transID){
+         
+         transactionList.put(transID, transactionWaitingList.get(transID));
+         transactionWaitingList.remove(transID);
+     }
+     
      public void addTransaction(int transID, MessagePacket packet){
          transactionWaitingList.put(transID, packet);
      }

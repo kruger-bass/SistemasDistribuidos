@@ -12,7 +12,7 @@ import java.security.spec.*;
  * @author kruger
  * Implements methods that generates a keypair, sign a transaction and verify a transaction.
  */
-public class GenSig {
+public class GenSig implements Serializable{
     
     public GenSig(){}
 
@@ -36,7 +36,7 @@ public class GenSig {
     {
         byte [] realSig = null;
         try{
-            Signature sig = Signature.getInstance("SHA1withRSA", "SUN");
+            Signature sig = Signature.getInstance("SHA256withRSA", "SunRsaSign");
             sig.initSign(priv);
             sig.update(data); // must be a byte[]
             realSig = sig.sign();
@@ -51,7 +51,7 @@ public class GenSig {
         boolean verifies = false;
         try
         {
-            Signature sig = Signature.getInstance("SHA1withRSA", "SUN");
+            Signature sig = Signature.getInstance("SHA256withRSA", "SunRsaSign");
             sig.initVerify(key);
             sig.update(data);
             verifies = sig.verify(signature);

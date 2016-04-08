@@ -21,46 +21,6 @@ import java.util.logging.Logger;
  *
  * @author Marmota
  */
-/*
-public class UnicastListener extends Thread{
-    
-       DataInputStream in;
-	ServerSocket ss;
-       BitCoinSystem mainClass;
-        
-	public UnicastListener (int port, BitCoinSystem bcs) {
-            
-        try {            
-            
-            ss = new ServerSocket(port);
-            mainClass = bcs;
-            this.start();
-            
-        } catch (IOException ex) {
-            Logger.getLogger(UnicastListener.class.getName()).log(Level.SEVERE, null, ex);
-        }
-	}
-        
-	public void run(){
-		try {	
-			while(true) {
-				Socket clientSocket = ss.accept();
-                            
-			}
-		}catch (EOFException e){System.out.println("EOF:"+e.getMessage());
-		} catch(IOException e) {System.out.println("readline:"+e.getMessage());
-		} finally{ 
-                    try {
-                        clientSocket.close();
-                    }catch (IOException e){
-                   
-                    }
-                }
-		
-
-	}
-}
-*/
 public class UnicastListener extends Thread{
     
     int port;
@@ -118,7 +78,7 @@ class Connection extends Thread {
                      //Recebe a mensagem e decide o que fazer com ela
                      //Se for mensagem de welcome, substitui o ledger da mainclass
                      //Se for mensagem de purchase, verifica disponibilidade e envia um transaction
-                     byte[] data = new byte[1000];
+                     byte[] data = new byte[10000];
                      in.read(data);     
                      
                      inPacket = mainClass.getInputStream(data);
@@ -147,8 +107,6 @@ class Connection extends Thread {
                     /*close failed*/
                     }
                 }
-		
-
 	}
         
        /**
@@ -160,16 +118,21 @@ class Connection extends Thread {
            
            transaction = new Transaction(message.portID, mainClass.port, message.purchaseValue, System.currentTimeMillis());
            outPacket = new MessagePacket(mainClass.TRANSACTION, transaction, ((mainClass.port*100) + mainClass.transactionCounter));
+           System.out.println("TransID: " + outPacket.transID);
            mainClass.transactionCounter++;
-           mainClass.sendUnicast(message.portID, message);
+           mainClass.sendUnicast(message.portID, outPacket);
+           System.out.println(message.portID);
        }
        
        public void transactionHandler(MessagePacket message){
            
            byte[] signature = GenSig.SignTransaction(mainClass.keyPair.getPrivate(), mainClass.getTransactionOutputStream(message.trans));
+           //System.out.println(mainClass.keyPair.getPrivate());
+           //System.out.println(mainClass.getTransactionOutputStream(message.trans));
            outPacket = new MessagePacket(mainClass.CONFIRMTRANSACTION, message.trans, message.transID, signature);
            
            mainClass.sendMulticast(outPacket);
+           System.out.println("th");
        }
        
        public void welcomeHandler(MessagePacket message){
