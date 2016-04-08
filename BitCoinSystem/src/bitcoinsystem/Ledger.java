@@ -32,8 +32,8 @@ public class Ledger implements Serializable{
      public void confirmTransaction(byte[] data, byte[] signature, PublicKey pk, int transID){
          boolean verified = GenSig.VerifySignature(data, signature, pk);
          if(verified){
-            transactionList.put(transID, transactionWaitingList.get(transID));
-            transactionWaitingList.remove(transID);
+            //transactionList.put(transID, transactionWaitingList.get(transID));
+            //transactionWaitingList.remove(transID);
          } else{
              System.out.println("Error: ConfirmTransaction");
          }

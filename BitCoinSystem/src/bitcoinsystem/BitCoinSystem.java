@@ -45,6 +45,7 @@ public class BitCoinSystem {
     public static final int CONFIRMTRANSACTION = 106;
     public static final int REWARDPORT = 6789;
     public static final int REWARDVALUE = 1;
+    public static final int EXTRAREWARD = 1;
     
     int port;
     int multiport = 6789;
@@ -68,8 +69,10 @@ public class BitCoinSystem {
     int price; //price of your products in bitcoins
     int wallet; //amount of bitcoins
     int transactionCounter; // used to make transaction ID's
+    int userCounter = 0;
     KeyPair keyPair = null;
-    
+    boolean receivedSignal = false;
+    boolean applicationStarted = false;
     
     public BitCoinSystem(){
         
@@ -93,8 +96,8 @@ public class BitCoinSystem {
         catch (IOException e){System.out.println("readline:"+e.getMessage());}
         
         gui = new BitcoinGUI(this);
-        announceEntry();
         multiListener = new MulticastListener(multiport, this);
+        announceEntry();
     }
     
     public static void main(String[] args) {
@@ -102,53 +105,20 @@ public class BitCoinSystem {
     }
     
     
-    //incompleto
+    //para testes, alterar int i e "if i"
     public void announceEntry(){
         
         outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic()); // pacote de entrada com a public key e preço das moedas
         sendMulticast(outPacket);
+        inPacket = new MessagePacket();
         
-        for(int i=0;i<4;i++){
-            inPacket = receiveMulticast();
-            
-            if(inPacket.messageID == HELLO){
-                ledger.addUser(inPacket);
-                System.out.println("Recebido uma mensagem de Olá");
-                if(i == 1){
-                    System.out.println("4 usuários no sistema, enviando Boas-Vindas.");
-                    outPacket = new MessagePacket(WELCOME, ledger);
-                    //envia o WELCOME via unicast
-                    
-                    Iterator it = ledger.userList.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        System.out.println(pair.getKey() + " = " + pair.getValue());
-                        try{
-                            if(port != (int)pair.getKey()){
-                            System.out.println((int)pair.getKey());
-                            sendUnicast((int)pair.getKey(), outPacket);
-                            }
-                        }catch(ClassCastException e){
-                            System.out.println(e);
-                        }
-                    }
-                }
-            }
-            
-            if(inPacket.messageID == WELCOME){
-                System.out.println("Recebido uma mensagem de Boas-Vindas");
-                ledger = inPacket.ledger;
-                break;
-            }
-        }
         System.out.println("Finalizado anúncio de entrada.");
     }
-    
     
     //método para compra com bitcoins
     public void purchase(int port, int value){
          
-        if(value <= wallet){
+        if(value < wallet){
             outPacket = new MessagePacket(REQUESTTRANSACTION, value, this.port);
             sendUnicast(port, outPacket);
         } else{
@@ -169,7 +139,7 @@ public class BitCoinSystem {
             ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID);
             
             time = System.currentTimeMillis();
-            reward = new Transaction(port, REWARDPORT, REWARDVALUE, time );
+            reward = new Transaction(REWARDPORT, port, REWARDVALUE, time);
             outPacket = new MessagePacket(VALIDATE, reward, transID);
             
             sendMulticast(outPacket);

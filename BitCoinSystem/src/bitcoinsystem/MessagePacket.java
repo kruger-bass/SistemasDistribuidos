@@ -59,5 +59,5 @@ public class MessagePacket implements Serializable{
         this.signature = s;
     }
     
-    
+    public MessagePacket(){}
 }

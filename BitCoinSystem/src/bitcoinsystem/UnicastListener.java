@@ -131,7 +131,7 @@ class Connection extends Thread {
            //System.out.println(mainClass.keyPair.getPrivate());
            //System.out.println(mainClass.getTransactionOutputStream(message.trans));
            outPacket = new MessagePacket(mainClass.CONFIRMTRANSACTION, message.trans, message.transID, signature);
-           
+           System.out.println("transID" + outPacket.transID);
            mainClass.sendMulticast(outPacket);
            System.out.println("th");
        }
@@ -139,5 +139,6 @@ class Connection extends Thread {
        public void welcomeHandler(MessagePacket message){
            
            mainClass.ledger = message.ledger;
+           System.out.println("recebido boas-vindas");
        }
 }
