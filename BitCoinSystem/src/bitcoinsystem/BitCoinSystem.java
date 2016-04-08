@@ -43,7 +43,7 @@ public class BitCoinSystem {
     public static final int VALIDATE = 103;
     public static final int REQUESTTRANSACTION = 104;
     public static final int TRANSACTION = 105;
-    public static final int CONFIRMTRANSACTION = 106;
+    public static final int TRANSACTIONTOCONFIRM = 106;
     public static final int REWARDPORT = 6789;
     public static final int REWARDVALUE = 1;
     public static final int EXTRAREWARD = 1;
@@ -124,7 +124,7 @@ public class BitCoinSystem {
     //método para compra com bitcoins
     public void purchase(int port, int value){
          
-        if(value < wallet){
+        if(value + EXTRAREWARD <= wallet){
             outPacket = new MessagePacket(REQUESTTRANSACTION, value, this.port);
             sendUnicast(port, outPacket);
         } else{
@@ -135,11 +135,11 @@ public class BitCoinSystem {
     
     //método para minerar bitcoins
     public void validateTransaction(int transID){
-        System.out.println("dbug validate pre");
+        //System.out.println("dbug validate pre");
         
         if(ledger.transactionWaitingList.containsKey(transID)){//se existe a transação na lista de espera
             
-            System.out.println("dbug validate");
+            //System.out.println("dbug validate");
             MessagePacket packet = ledger.transactionWaitingList.get(transID);
             PublicKey pubK = ledger.userList.get(packet.trans.senderPort).publicKey;
             ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID);
@@ -150,6 +150,40 @@ public class BitCoinSystem {
             
             sendMulticast(outPacket);
         }
+    }
+    
+    public void printPrices(){
+        Iterator it = ledger.userList.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            //System.out.println(pair.getKey() + " = " + pair.getValue());
+                            try{
+                                if(port != (int)pair.getKey()){
+                                //System.out.println((int)pair.getKey());
+                                MessagePacket user = ledger.userList.get((int)pair.getKey());
+                                    System.out.println("Usuário da porta: " + user.portID + " tem produtos que custam: " + user.userPrice);
+                                }
+                            }catch(ClassCastException e){
+                                System.out.println(e);
+                            }
+                        }
+    }
+    
+    public void printTransactions(){
+        Iterator it = ledger.transactionWaitingList.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            //System.out.println(pair.getKey() + " = " + pair.getValue());
+                            try{
+                                if(port != (int)pair.getKey()){
+                                //System.out.println((int)pair.getKey());
+                                MessagePacket tra = ledger.transactionWaitingList.get((int)pair.getKey());
+                                    System.out.println("Transação de ID: " + tra.transID + " precisa de confirmação");
+                                }
+                            }catch(ClassCastException e){
+                                System.out.println(e);
+                            }
+                        }
     }
     
     // Envia mensagem no grupo multicast
@@ -221,12 +255,9 @@ public class BitCoinSystem {
     public MessagePacket getInputStream(byte[] data){
         MessagePacket packet = null;
             try {
-                    System.out.println("debug2");
                     byteArrayIS = new ByteArrayInputStream(data);
                     objectIS = new ObjectInputStream(byteArrayIS);
-                    System.out.println("debug1");
                     packet = (MessagePacket) objectIS.readObject();
-                    System.out.println("debug0");
                     //System.out.println("Message received = "+packet.messageID);
                 } catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());
                 } catch (IOException e){System.out.println("readline:"+e.getMessage());

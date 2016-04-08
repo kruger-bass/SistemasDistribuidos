@@ -85,7 +85,7 @@ class Connection extends Thread {
                      in.read(data);     
                      
                      inPacket = mainClass.getInputStream(data);
-                     System.out.println(inPacket.messageID);
+                     //System.out.println(inPacket.messageID);
                      
                      if(inPacket.messageID == mainClass.REQUESTTRANSACTION){
                          
@@ -117,10 +117,10 @@ class Connection extends Thread {
            
            transaction = new Transaction(message.portID, mainClass.port, message.purchaseValue, System.currentTimeMillis());
            outPacket = new MessagePacket(mainClass.TRANSACTION, transaction, ((mainClass.port*100) + mainClass.transactionCounter));
-           System.out.println("TransID: " + outPacket.transID);
+           //System.out.println("TransID: " + outPacket.transID);
            mainClass.transactionCounter++;
            mainClass.sendUnicast(message.portID, outPacket);
-           System.out.println(message.portID);
+           //System.out.println(message.portID);
        }
        
        // Método que assina transação
@@ -129,10 +129,10 @@ class Connection extends Thread {
            byte[] signature = GenSig.SignTransaction(mainClass.keyPair.getPrivate(), mainClass.getTransactionOutputStream(message.trans));
            //System.out.println(mainClass.keyPair.getPrivate());
            //System.out.println(mainClass.getTransactionOutputStream(message.trans));
-           outPacket = new MessagePacket(mainClass.CONFIRMTRANSACTION, message.trans, message.transID, signature);
-           System.out.println("transID" + outPacket.transID);
+           outPacket = new MessagePacket(mainClass.TRANSACTIONTOCONFIRM, message.trans, message.transID, signature);
+           //System.out.println("transID" + outPacket.transID);
            mainClass.sendMulticast(outPacket);
-           System.out.println("th");
+           //System.out.println("th");
        }
        
        // método que recebe o banco de dados distribuído.

@@ -21,6 +21,7 @@ public class BitcoinGUI extends javax.swing.JFrame {
         this.setVisible(true);
         port.setText(String.valueOf(bcs.port));
         bitcoinAmountLabel.setText(String.valueOf(bcs.wallet));
+        priceLabel.setText(String.valueOf(bcs.price));
     }
 
     /**
@@ -45,6 +46,12 @@ public class BitcoinGUI extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         bitcoinAmountLabel = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        priceLabel = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel7 = new javax.swing.JLabel();
+        priceButton = new javax.swing.JButton();
+        transactionButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,15 +89,50 @@ public class BitcoinGUI extends javax.swing.JFrame {
 
         bitcoinAmountLabel.setText("bitcoins");
 
+        jLabel6.setText("Preço:");
+
+        priceLabel.setText("price");
+
+        jLabel7.setText("Seção de visualização:");
+
+        priceButton.setText("Preços");
+        priceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                priceButtonActionPerformed(evt);
+            }
+        });
+
+        transactionButton.setText("Transações");
+        transactionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transactionButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1)
+                .addGap(16, 16, 16)
+                .addComponent(port)
+                .addGap(75, 75, 75)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(priceLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bitcoinAmountLabel)
+                .addGap(71, 71, 71))
+            .addComponent(jSeparator2)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
@@ -104,23 +146,13 @@ public class BitcoinGUI extends javax.swing.JFrame {
                                 .addComponent(jLabel4)))
                         .addGap(18, 18, 18)
                         .addComponent(sendPortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(sendButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(validateButton)))
-                .addContainerGap(219, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
-                .addGap(16, 16, 16)
-                .addComponent(port)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bitcoinAmountLabel)
-                .addGap(71, 71, 71))
+                    .addComponent(sendButton)
+                    .addComponent(validateButton)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(transactionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(priceButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,7 +162,9 @@ public class BitcoinGUI extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(port, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel5)
-                    .addComponent(bitcoinAmountLabel))
+                    .addComponent(bitcoinAmountLabel)
+                    .addComponent(jLabel6)
+                    .addComponent(priceLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -147,7 +181,15 @@ public class BitcoinGUI extends javax.swing.JFrame {
                     .addComponent(transIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(validateButton)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(priceButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transactionButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -161,6 +203,14 @@ public class BitcoinGUI extends javax.swing.JFrame {
         mainClass.validateTransaction(Integer.parseInt(transIDLabel.getText()));
     }//GEN-LAST:event_validateButtonActionPerformed
 
+    private void transactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transactionButtonActionPerformed
+        mainClass.printTransactions();
+    }//GEN-LAST:event_transactionButtonActionPerformed
+
+    private void priceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceButtonActionPerformed
+        mainClass.printPrices();
+    }//GEN-LAST:event_priceButtonActionPerformed
+
     
     public void setBitcoinAmountLabel(int value){
         bitcoinAmountLabel.setText(String.valueOf(value));
@@ -173,12 +223,18 @@ public class BitcoinGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel port;
+    private javax.swing.JButton priceButton;
+    private javax.swing.JLabel priceLabel;
     private javax.swing.JButton sendButton;
     private javax.swing.JTextField sendPortLabel;
     private javax.swing.JTextField sendValue;
     private javax.swing.JTextField transIDLabel;
+    private javax.swing.JButton transactionButton;
     private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
 }
