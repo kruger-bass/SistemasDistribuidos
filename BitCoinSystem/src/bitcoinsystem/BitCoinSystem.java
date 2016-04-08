@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -37,12 +38,16 @@ public class BitCoinSystem {
     public static final int HELLO = 101;
     public static final int WELCOME = 102;
     public static final int VALIDATE = 103;
+    public static final int REQUESTTRANSACTION = 104;
+    public static final int TRANSACTION = 105;
+    public static final int CONFIRMTRANSACTION = 106;
     public static final int REWARDPORT = 6789;
     public static final int REWARDVALUE = 1;
     
     int port;
     int multiport = 6789;
     Socket s = null;
+    UnicastListener listener = null;
     MulticastSocket m = null;
     InetAddress group;
     
@@ -56,8 +61,11 @@ public class BitCoinSystem {
     Ledger ledger = new Ledger();
     Transaction reward = new Transaction();
     BitcoinGUI gui;
-    long time;
-    int price;
+    long time; 
+    int price; //price of your products in bitcoins
+    int wallet; //amount of bitocins
+    int transactionCounter; // used to make transaction ID's
+    
     
     
     public BitCoinSystem(){
@@ -71,7 +79,7 @@ public class BitCoinSystem {
         
         try
         {
-            s = new Socket("127.0.0.1", port);
+            listener = new UnicastListener(port, this);
             group = InetAddress.getByName("224.0.0.10");
             m = new MulticastSocket(multiport);
             m.joinGroup(group);
@@ -108,8 +116,14 @@ public class BitCoinSystem {
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry)it.next();
                         System.out.println(pair.getKey() + " = " + pair.getValue());
-                        
-                        //sendUnicast(pair.getKey(), outPacket);
+                        try{
+                            if(port != (int)pair.getKey()){
+                            System.out.println((int)pair.getKey());
+                            sendUnicast((int)pair.getKey(), outPacket);
+                            }
+                        }catch(ClassCastException e){
+                            System.out.println(e);
+                        }
                     }
                 }
             }
@@ -124,19 +138,15 @@ public class BitCoinSystem {
     }
     
     
-    //método para mandar bitcoins
-    public void sendBitcoin(int port, int value){
+    //método para compra com bitcoins
+    public void purchase(int port, int value){
          
-        // Abre o socket para esta transação
-        try
-        {
-            s = new Socket("127.0.0.1", port);
+        if(value <= wallet){
+            outPacket = new MessagePacket(REQUESTTRANSACTION, value, port);
+            sendUnicast(port, outPacket);
+        } else{
+            System.out.println("Error: Insufficient bitcoin to begin purchase");
         }
-        catch(UnknownHostException e){System.out.println("Socket:"+e.getMessage());}
-        catch (IOException e){System.out.println("readline:"+e.getMessage());}
-        finally {if(s!=null) try {s.close();}catch (IOException e){System.out.println("close:"+e.getMessage());}}
-        // Socket fechado
-        
     }
     
     
@@ -145,7 +155,8 @@ public class BitCoinSystem {
         
         if(ledger.transactionWaitingList.containsKey(transID)){
         
-            ledger.confirmTransaction(transID);
+            //ledger.confirmTransaction(transID);
+            // colocar a chave publica do sender
             
             time = System.currentTimeMillis();
             reward = new Transaction(port, REWARDPORT, REWARDVALUE, time);
@@ -222,27 +233,16 @@ public class BitCoinSystem {
     }
     
     // Métodos que mandam mensagens unicast no localHost    
-    public void sendUnicast (Socket CommSocket, String payload) {
+    public void sendUnicast (int port, MessagePacket message) {
 		// arguments supply message and hostname
+        
 		try{
-                            DataOutputStream out =new DataOutputStream( CommSocket.getOutputStream());
-                            out.writeUTF(payload);
-		}catch (IOException e){System.out.println("readline:"+e.getMessage());
+                            s = new Socket("localhost", port);
+                            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+                            out.write(getOutputStream(message));
+		}catch (IOException e){
+                    System.out.println("readline:"+e.getMessage());
 		}
      }
-    
-    public String receiveUnicast (Socket CommSocket)
-    {
-        String data = null;
-    		try{
-                            DataInputStream in = new DataInputStream( CommSocket.getInputStream());
-                            data = in.readUTF();	    // read a line of data from the stream
-                            System.out.println("Received: "+ data) ; 
-		}catch (EOFException e){System.out.println("EOF:"+e.getMessage());
-		}catch (IOException e){System.out.println("readline:"+e.getMessage());
-		}
-                return data;
-    }
-    
     // TODO: thread that keeps listening on PORT, them reads and resolves that message.
 }

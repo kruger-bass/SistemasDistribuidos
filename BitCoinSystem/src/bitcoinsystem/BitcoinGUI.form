@@ -109,9 +109,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="ex:7698"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendPortLabelActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="sendButton">
       <Properties>
@@ -142,6 +139,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Validar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="validateButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="sendValue">
       <Properties>

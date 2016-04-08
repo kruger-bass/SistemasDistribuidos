@@ -50,11 +50,6 @@ public class BitcoinGUI extends javax.swing.JFrame {
         jLabel1.setText("Porta:");
 
         sendPortLabel.setText("ex:7698");
-        sendPortLabel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendPortLabelActionPerformed(evt);
-            }
-        });
 
         sendButton.setText("Enviar");
         sendButton.addActionListener(new java.awt.event.ActionListener() {
@@ -70,6 +65,11 @@ public class BitcoinGUI extends javax.swing.JFrame {
         transIDLabel.setText("ex:");
 
         validateButton.setText("Validar");
+        validateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                validateButtonActionPerformed(evt);
+            }
+        });
 
         sendValue.setText("ex:50");
 
@@ -139,13 +139,13 @@ public class BitcoinGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sendPortLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendPortLabelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sendPortLabelActionPerformed
-
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        // TODO add your handling code here:
+        mainClass.purchase(Integer.parseInt(sendPortLabel.getText()), Integer.parseInt(sendValue.getText()));
     }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
+        mainClass.validateTransaction(Integer.parseInt(transIDLabel.getText()));
+    }//GEN-LAST:event_validateButtonActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

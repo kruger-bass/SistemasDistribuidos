@@ -4,13 +4,15 @@
  */
 package bitcoinsystem;
 
+import java.io.Serializable;
+import java.security.PublicKey;
 import java.util.HashMap;
 
 /**
  *
  * @author Marmota
  */
-public class Ledger {
+public class Ledger implements Serializable{
     
     //transaction ID, and transaction
      HashMap<Integer, Transaction> transactionList = new HashMap<Integer, Transaction>();
@@ -25,9 +27,10 @@ public class Ledger {
      public Ledger(){
      }
      
-     public void confirmTransaction(int transID){
+     public void confirmTransaction(int transID, PublicKey pk){
          transactionList.put(transID, transactionWaitingList.get(transID));
          transactionWaitingList.remove(transID);
+         //verificar assinatura
      }
      
      public void addTransaction(int transID, Transaction trans){
