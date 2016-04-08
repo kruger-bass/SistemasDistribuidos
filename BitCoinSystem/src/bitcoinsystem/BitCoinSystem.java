@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author kruger
+ * @author Marmota
  */
 
 public class BitCoinSystem {
