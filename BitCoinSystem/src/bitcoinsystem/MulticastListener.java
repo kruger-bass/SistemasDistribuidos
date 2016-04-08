@@ -50,21 +50,21 @@ public class MulticastListener extends Thread{
            try{
 			while(true) {
 				byte[] buffer = new byte[1000];
-                                System.out.println("debug, initiate multicast listen");
+                                //System.out.println("debug, initiate multicast listen");
                                 DatagramPacket getPacket = new DatagramPacket(buffer, buffer.length);
                                 multiSocket.receive(getPacket);
 
-                                System.out.println("got something");
+                                //System.out.println("got something");
                                 ByteBuffer wrapped = ByteBuffer.wrap(getPacket.getData());
 
                                 inPacket = mainClass.getInputStream(wrapped.array());
-                                System.out.println("got this:" + inPacket.messageID);
+                                //System.out.println("got this:" + inPacket.messageID);
                                 
                                 if(inPacket.messageID == mainClass.HELLO){
 
                                     helloHandler(inPacket);
 
-                                } else if(inPacket.messageID == mainClass.CONFIRMTRANSACTION){
+                                } else if(inPacket.messageID == mainClass.TRANSACTIONTOCONFIRM){
 
                                     confirmTransactionHandler(inPacket);
 
@@ -81,16 +81,16 @@ public class MulticastListener extends Thread{
        public void helloHandler(MessagePacket message){
            
            if(mainClass.applicationStarted == true){
-               System.out.println("toaqui");
+               //System.out.println("toaqui");
                 outPacket = new MessagePacket(mainClass.WELCOME, mainClass.ledger);
                 mainClass.sendUnicast(message.portID, outPacket);
            } else {
-               System.out.println("tolah");
+               //System.out.println("tolah");
                //mainClass.trueReceivedSignal(message);
                mainClass.ledger.addUser(message);
                mainClass.userCounter++;
                
-               if(mainClass.userCounter >= 2){
+               if(mainClass.userCounter >= 4){
                    Iterator it = mainClass.ledger.userList.entrySet().iterator();
                    outPacket = new MessagePacket(mainClass.WELCOME, mainClass.ledger);
                         while (it.hasNext()) {
@@ -98,7 +98,7 @@ public class MulticastListener extends Thread{
                             System.out.println(pair.getKey() + " = " + pair.getValue());
                             try{
                                 if(mainClass.port != (int)pair.getKey()){
-                                System.out.println((int)pair.getKey());
+                                //System.out.println((int)pair.getKey());
                                 mainClass.sendUnicast((int)pair.getKey(), outPacket);
                                     System.out.println("Unicast de boas vindas enviado!");
                                 }
@@ -112,7 +112,7 @@ public class MulticastListener extends Thread{
        
        public void confirmTransactionHandler(MessagePacket message){
            
-           System.out.println("transIDID:" + message.transID);
+           //System.out.println("transIDID:" + message.transID);
            mainClass.ledger.addTransaction(message.transID, message);
            
        }
@@ -120,17 +120,9 @@ public class MulticastListener extends Thread{
        public void validateHandler(MessagePacket message){
        
            mainClass.ledger.transactionConfirmed(message.transID);
-           /*
-           if(message.trans.senderPort == mainClass.port){
-               mainClass.wallet -= message.trans.value;
-               mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
-           } else if(message.trans.receiverPort == mainClass.port){
-               mainClass.wallet += message.trans.value;
-               mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
-           }
-           */
-           MessagePacket pack = mainClass.ledger.transactionList.get(message.transID);
-           System.out.println(mainClass.ledger.transactionList.get(message.transID).messageID);
+           
+           //MessagePacket pack = mainClass.ledger.transactionList.get(message.transID);
+           //System.out.println(mainClass.ledger.transactionList.get(message.transID).messageID);
            Transaction aux = mainClass.ledger.transactionList.get(message.transID).trans;
            System.out.println(aux.receiverPort);
            System.out.println(aux.senderPort);
@@ -144,6 +136,7 @@ public class MulticastListener extends Thread{
            } 
            if(message.trans.receiverPort == mainClass.port){
                mainClass.wallet += message.trans.value;
+               mainClass.wallet += mainClass.EXTRAREWARD;
                mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
            }
            
