@@ -93,6 +93,5 @@ public class MulticastListener extends Thread{
                mainClass.wallet =+ message.trans.value;
                mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
            }
-           
        }
 }

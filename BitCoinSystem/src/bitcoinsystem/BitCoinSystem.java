@@ -105,7 +105,7 @@ public class BitCoinSystem {
     //incompleto
     public void announceEntry(){
         
-        outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic());
+        outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic()); // pacote de entrada com a public key e preço das moedas
         sendMulticast(outPacket);
         
         for(int i=0;i<4;i++){

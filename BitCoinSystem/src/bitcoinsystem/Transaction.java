@@ -16,7 +16,7 @@ import java.security.*;
 public class Transaction implements Serializable{
     
     int senderPort;
-    int receiverPort; //receiver port 6789 é recompensa de mineração
+    int receiverPort; 
     int value;
     long timestamp;
     

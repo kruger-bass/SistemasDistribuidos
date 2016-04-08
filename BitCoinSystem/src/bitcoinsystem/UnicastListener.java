@@ -78,6 +78,7 @@ class Connection extends Thread {
                      //Recebe a mensagem e decide o que fazer com ela
                      //Se for mensagem de welcome, substitui o ledger da mainclass
                      //Se for mensagem de purchase, verifica disponibilidade e envia um transaction
+                     //Se for mensagem de Transaction Start, assina a mensagem e transmite multicast.
                      byte[] data = new byte[10000];
                      in.read(data);     
                      
