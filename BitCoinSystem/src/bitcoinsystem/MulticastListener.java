@@ -84,11 +84,11 @@ public class MulticastListener extends Thread{
        public void helloHandler(MessagePacket message){
            
            if(mainClass.applicationStarted == true){ // Se o sistema já está funcionando
-               System.out.println("toaqui");
+               //System.out.println("toaqui");
                 outPacket = new MessagePacket(mainClass.WELCOME, mainClass.ledger);
                 mainClass.sendUnicast(message.portID, outPacket);
            } else { // Se o sistema ainda está começando
-               System.out.println("tolah");
+               //System.out.println("tolah");
                //mainClass.trueReceivedSignal(message);
                mainClass.ledger.addUser(message);
                mainClass.userCounter++;
