@@ -20,8 +20,18 @@ public class Transaction implements Serializable{
     int value;
     long timestamp;
     
+    /**
+     * Construtor vazio.
+     */
     public Transaction(){}
     
+    /**
+     * Construtor completo
+     * @param sp Porta da pessoa que quer pagar com bitcoins - seu "ID"
+     * @param rp Porta da pessoa que vai receber os bitcoins
+     * @param v Quantidade de bitcoins relacionados com a transação
+     * @param t Timestamp
+     */
     public Transaction(int sp, int rp, int v, long t){
         this.senderPort = sp;
         this.receiverPort = rp;

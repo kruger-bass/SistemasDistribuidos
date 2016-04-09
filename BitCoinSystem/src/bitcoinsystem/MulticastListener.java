@@ -33,7 +33,11 @@ public class MulticastListener extends Thread{
     MessagePacket inPacket, outPacket;
     InetAddress group;
     
-    // Construtor do listener
+    /**
+     * Construtor do listener Multicast
+     * @param port Porta na qual ele deve ouvir
+     * @param bcs instância do sistema de bitcoins
+     */
 	public MulticastListener (int port, BitCoinSystem bcs) {
             
 		try{
@@ -46,6 +50,9 @@ public class MulticastListener extends Thread{
 		} catch(IOException e) {System.out.println("Listen socket:"+e.getMessage());}
 	}
         
+        /**
+         * Método run da thread Multicast Listener
+         */
        public void run(){
        
            try{
@@ -61,7 +68,7 @@ public class MulticastListener extends Thread{
                                 inPacket = mainClass.getInputStream(wrapped.array());
                                 //System.out.println("got this:" + inPacket.messageID);
                                 
-                                // Separa a mensagem ouvida em vários pedaços
+                                // Envia a mensagem recebida para o método correto
                                 if(inPacket.messageID == mainClass.HELLO){
 
                                     helloHandler(inPacket);
@@ -80,7 +87,10 @@ public class MulticastListener extends Thread{
 		} catch(IOException e) {System.out.println("Listen socket:"+e.getMessage());}
        }
        
-       // função que trata a mensagem Hello
+       /**
+        * função que trata a mensagem Hello
+        * @param message mensagem recebida
+        */
        public void helloHandler(MessagePacket message){
            
            if(mainClass.applicationStarted == true){ // Se o sistema já está funcionando
@@ -113,7 +123,10 @@ public class MulticastListener extends Thread{
            }
        }
        
-       // Manipula mensagem de transação
+       /**
+        * Manipula mensagem de transação
+        * @param message 
+        */
        public void confirmTransactionHandler(MessagePacket message){
            
            //System.out.println("transIDID:" + message.transID);
@@ -121,7 +134,10 @@ public class MulticastListener extends Thread{
            
        }
        
-       // Manipula mensagem de transação confirmada
+       /**
+        * Manipula mensagem de transação confirmada
+        * @param message 
+        */
        public void validateHandler(MessagePacket message){
        
            mainClass.ledger.transactionConfirmed(message.transID);

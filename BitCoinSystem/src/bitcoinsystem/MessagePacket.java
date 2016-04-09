@@ -24,7 +24,13 @@ public class MessagePacket implements Serializable{
     PublicKey publicKey= null;
     byte [] signature = null;
     
-    //user info message
+    /**
+     * Construtor para mensagem com infos do usuário
+     * @param mid Tipo de mensagem enviada
+     * @param uid Identificação do usuário
+     * @param p Preço do produto
+     * @param pk Chave pública
+     */
     public MessagePacket(int mid, int uid, int p, PublicKey pk){
         this.messageID = mid; //Hello
         this.portID = uid;
@@ -32,27 +38,47 @@ public class MessagePacket implements Serializable{
         this.publicKey = pk;
     }
     
-    //Database message
+    /**
+     * Construtor da Database message
+     * @param mid
+     * @param led 
+     */
     public MessagePacket(int mid, Ledger led){
         this.messageID = mid; //Welcome
         this.ledger = led;
     }
     
-    //Transaction Start message
+    /**
+     * Construtor da Transaction Start message 
+     * @param mid
+     * @param t
+     * @param tid 
+     */
     public MessagePacket(int mid, Transaction t, int tid){
         this.messageID = mid; //Transaction
         this.trans = t;
         this.transID = tid;
     }
     
-    //Purchase Order message
+    /**
+     * Construtor da Purchase Order message
+     * @param mid
+     * @param pv
+     * @param pid 
+     */
     public MessagePacket(int mid, int pv, int pid){
         this.messageID = mid; //RequestTransaction
         this.purchaseValue = pv;
         this.portID = pid;
     }
     
-    //Transaction Waiting Confirmation
+    /**
+     * Construtor da mensagem de transação assinada
+     * @param mid
+     * @param t
+     * @param tid
+     * @param s 
+     */
     public MessagePacket(int mid, Transaction t, int tid, byte[] s){
         this.messageID = mid;
         this.trans = t;
@@ -60,5 +86,8 @@ public class MessagePacket implements Serializable{
         this.signature = s;
     }
     
+    /**
+     * Construtor vazio
+     */
     public MessagePacket(){}
 }

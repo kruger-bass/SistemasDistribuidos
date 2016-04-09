@@ -8,15 +8,18 @@ import java.io.*;
 import java.security.*;
 import java.security.spec.*;
 /**
- * 
+ * Clase de croptografia
  * @author kruger
- * Implements methods that generates a keypair, sign a transaction and verify a transaction.
+ * Implementa os métodos que geram pares de chave, assinam e verificam assinaturas
  */
 public class GenSig implements Serializable{
     
     public GenSig(){}
 
-    // Gera par de chaves usando RSA 1024 bits
+    /**
+     * Gera par de chaves usando RSA 1024 bits
+     * @return Par de chaves
+     */
     public static KeyPair ultra3000KeyPairGenerator() {
        KeyPair pair = null;
        try {
@@ -33,7 +36,12 @@ public class GenSig implements Serializable{
         return pair;
     }
     
-    // Assina uma transação
+    /**
+     * Assina uma transação
+     * @param priv Chave privada
+     * @param data Transação a ser assinada
+     * @return 
+     */
     public static byte[] SignTransaction(PrivateKey priv, byte[] data)
     {
         byte [] realSig = null;
@@ -48,7 +56,13 @@ public class GenSig implements Serializable{
         return realSig;
     }
     
-    // Verifica se uma assinatura corresponde a uma transação e um processo.
+    /**
+     * Verifica se uma assinatura corresponde a uma transação e uma chave de usuário.
+     * @param data Transação
+     * @param signature Assinatura
+     * @param key Chave pública
+     * @return 
+     */
     public static boolean VerifySignature(byte [] data, byte[] signature, PublicKey key)
     {
         boolean verifies = false;

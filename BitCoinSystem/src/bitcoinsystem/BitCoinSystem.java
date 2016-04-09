@@ -30,7 +30,7 @@ import java.security.*;
 
 
 /**
- *
+ * Classe principal e diversas funções auxiliares
  * @author kruger
  * @author Marmota
  */
@@ -78,7 +78,9 @@ public class BitCoinSystem {
     boolean receivedSignal = false;
     boolean applicationStarted = false;
     
-    //Inicializa o usuário de bitcoins
+    /**
+     * Construtor que inicializa o usuário de bitcoins
+     */
     public BitCoinSystem(){
         // Estado inicial.
         transactionCounter = 0;
@@ -106,12 +108,18 @@ public class BitCoinSystem {
         announceEntry();
     }
     
+    /**
+     * Método Main
+     * @param args 
+     */
     public static void main(String[] args) {
         BitCoinSystem bitcoin = new BitCoinSystem();
     }
     
     
-    //Envio da mensagem inicial, com a identificação do usuário
+    /**
+     * Envio da mensagem inicial, com a identificação do usuário
+     */
     public void announceEntry(){
         
         outPacket = new MessagePacket(HELLO, port, price, keyPair.getPublic()); // pacote de entrada com a public key e preço das moedas
@@ -121,7 +129,11 @@ public class BitCoinSystem {
         System.out.println("Finalizado anúncio de entrada.");
     }
     
-    //método para compra com bitcoins
+    /**
+     * método para compra com bitcoins.
+     * @param port Identificação de para quem pagar em bitcoin
+     * @param value Quantidade definida de bitcoins a ser enviada.
+     */
     public void purchase(int port, int value){
          
         if(value + EXTRAREWARD <= wallet){
@@ -133,7 +145,10 @@ public class BitCoinSystem {
     }
     
     
-    //método para minerar bitcoins
+    /**
+     * método para minerar bitcoins
+     * @param transID Transação a ser mineirada
+     */
     public void validateTransaction(int transID){
         //System.out.println("dbug validate pre");
         
@@ -152,6 +167,9 @@ public class BitCoinSystem {
         }
     }
     
+    /**
+     * Método que imprime os preços de cada usuário na rede
+     */
     public void printPrices(){
         Iterator it = ledger.userList.entrySet().iterator();
                         while (it.hasNext()) {
@@ -169,6 +187,9 @@ public class BitCoinSystem {
                         }
     }
     
+    /**
+     * Método que imprime as transações em espera de confirmação
+     */
     public void printTransactions(){
         Iterator it = ledger.transactionWaitingList.entrySet().iterator();
                         while (it.hasNext()) {
@@ -186,7 +207,10 @@ public class BitCoinSystem {
                         }
     }
     
-    // Envia mensagem no grupo multicast
+    /**
+     * Envia mensagem no grupo multicast
+     * @param message 
+     */
     public void sendMulticast(MessagePacket message){
     
         try {
@@ -200,7 +224,11 @@ public class BitCoinSystem {
         }
     }
     
-    // recebe mensagem do grupo multicast
+    /**
+     * Método que recebe mensagem do grupo multicast.
+     * Não utilizado no projeto. Classe MulticastListener mostrou-se mais apropriada.
+     * @return 
+     */
     public MessagePacket receiveMulticast(){
         try {
             byte[] buffer = new byte[1000];
@@ -217,7 +245,11 @@ public class BitCoinSystem {
         return inPacket;
     }
     
-    // recebe array de bytes da mensagem
+    /**
+     * Método que retira array de bytes da mensagem
+     * @param message
+     * @return byte[] data
+     */
     public byte[] getOutputStream(MessagePacket message){
         
         byte[] data = null;
@@ -234,7 +266,11 @@ public class BitCoinSystem {
         return data;
     }
     
-    // recebe array de bytes da transação
+    /**
+     * Método que retira array de bytes da transação
+     * @param trans
+     * @return byte[] data
+     */
     public byte[] getTransactionOutputStream(Transaction trans){
         
         byte[] data = null;
@@ -251,7 +287,11 @@ public class BitCoinSystem {
         return data;
     }
     
-    // cria mensagem a partir de array de dados
+    /**
+     * cria mensagem a partir de array de dados
+     * @param data
+     * @return MessagePacket
+     */
     public MessagePacket getInputStream(byte[] data){
         MessagePacket packet = null;
             try {
@@ -268,7 +308,12 @@ public class BitCoinSystem {
         return packet;
     }
     
-    // cria transação a partir do array de dados
+    /**
+     * cria transação a partir do array de dados.
+     * Não utilizado em favor dos listeners
+     * @param data
+     * @return transaction
+     */
     public Transaction getTransactionInputStream(byte[] data){
         
         Transaction trans = null;
@@ -285,7 +330,11 @@ public class BitCoinSystem {
         return trans;
     }
     
-    // Métodos que mandam mensagens unicast no localHost    
+    /**
+     * Método que manda mensagens unicast no localHost   
+     * @param port
+     * @param message 
+     */
     public void sendUnicast (int port, MessagePacket message) {
 		// arguments supply message and hostname
         

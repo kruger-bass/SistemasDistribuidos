@@ -211,7 +211,10 @@ public class BitcoinGUI extends javax.swing.JFrame {
         mainClass.printPrices();
     }//GEN-LAST:event_priceButtonActionPerformed
 
-    
+    /**
+     * Método que atualiza a quantidade de bitcoins exibida.
+     * @param value 
+     */
     public void setBitcoinAmountLabel(int value){
         bitcoinAmountLabel.setText(String.valueOf(value));
     }

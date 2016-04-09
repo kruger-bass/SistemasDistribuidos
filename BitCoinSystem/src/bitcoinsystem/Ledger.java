@@ -10,7 +10,7 @@ import java.security.PublicKey;
 import java.util.HashMap;
 
 /**
- *
+ * Implementação do Banco de dados local
  * @author Marmota
  */
 public class Ledger implements Serializable{
@@ -25,11 +25,19 @@ public class Ledger implements Serializable{
      //portID, message packet
      HashMap<Integer, MessagePacket> userList = new HashMap<Integer, MessagePacket>();
      
-     
+     /**
+      * Construtor
+      */
      public Ledger(){
      }
      
-     // Valida a transação.
+     /**
+      * Valida a transação, usada pelo mineirador de bitcoins.
+      * @param data Vetor de bytes que representa a transação
+      * @param signature Assinatura da transação
+      * @param pk Chave pública de quem pagou em bitcoins
+      * @param transID 
+      */
      public void confirmTransaction(byte[] data, byte[] signature, PublicKey pk, int transID){
          boolean verified = GenSig.VerifySignature(data, signature, pk);
          if(verified){
@@ -40,19 +48,29 @@ public class Ledger implements Serializable{
          }
      }
      
-     //
+     /**
+      * Método que tira uma mensagem da lista de transações a confirmar e coloca na de transações confirmadas
+      * @param transID 
+      */
      public void transactionConfirmed(int transID){
          
          transactionList.put(transID, transactionWaitingList.get(transID));
          transactionWaitingList.remove(transID);
      }
      
-     // inclui transação a ser validada
+     /**
+      * Método que inclui transação na lista a ser validada
+      * @param transID
+      * @param packet Guardamos o pacote inteiro
+      */
      public void addTransaction(int transID, MessagePacket packet){
          transactionWaitingList.put(transID, packet);
      }
      
-     // inclui usuário no BD
+     /**
+      * Método que inclui usuário no BD
+      * @param packet 
+      */
      public void addUser(MessagePacket packet){
          userList.put(packet.portID, packet);
      }

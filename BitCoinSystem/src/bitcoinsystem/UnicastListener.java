@@ -27,7 +27,11 @@ public class UnicastListener extends Thread{
     BitCoinSystem mainClass;
     ServerSocket serverSocket;
     
-    // Construtor do listener
+    /**
+    * Construtor do listener
+    * Recebe a porta que deve abrir
+    * E uma referência à classe principal
+    */
 	public UnicastListener (int port, BitCoinSystem bcs) {
             
 		try{
@@ -38,7 +42,11 @@ public class UnicastListener extends Thread{
 		} catch(IOException e) {System.out.println("Listen socket:"+e.getMessage());}
 	}
         
-       public void run(){ // O listener lança uma classe para tratar cada conexão individualmente
+       /**
+        * Método 'run' para a thread listener.
+        * Lança uma nova thread para tratar cada conexão recebida.
+        */
+        public void run(){ 
        
            try{
 			while(true) {
@@ -49,7 +57,10 @@ public class UnicastListener extends Thread{
        }
 }
 
-// Classe que trata cada conexão TCP
+/**
+ * Classe para tratar cada conexão TCP
+ * @author kruger
+ */
 class Connection extends Thread {
 	DataInputStream in;
 	DataOutputStream out;
@@ -65,6 +76,11 @@ class Connection extends Thread {
        BitCoinSystem mainClass;
        Transaction transaction;
        
+       /**
+        * 
+        * @param aClientSocket Socket para comunicação com o cliente
+        * @param bcs Sistema de bitcoin do usuário
+        */
 	public Connection (Socket aClientSocket, BitCoinSystem bcs) {
 		try {
                      mainClass = bcs;
@@ -75,6 +91,10 @@ class Connection extends Thread {
 		} catch(IOException e) {System.out.println("Connection:"+e.getMessage());}
 	}
         
+        /**
+         * Método 'run' para a thread Connection.
+         * Chama uma função específica para cada tipo de mensagem recebida.
+         */
 	public void run(){
 		try {			                 
                      //Recebe a mensagem e decide o que fazer com ela
@@ -112,7 +132,10 @@ class Connection extends Thread {
                 }
 	}
         
-       //Método que cria transação
+        /**
+         * Método que cria transação
+         * @param message 
+         */
        public void requestTransactionHandler(MessagePacket message){
            
            transaction = new Transaction(message.portID, mainClass.port, message.purchaseValue, System.currentTimeMillis());
@@ -123,7 +146,10 @@ class Connection extends Thread {
            //System.out.println(message.portID);
        }
        
-       // Método que assina transação
+       /**
+        * Método que assina transação
+        * @param message mensagem recebida com a transação.
+        */
        public void transactionHandler(MessagePacket message){
            
            byte[] signature = GenSig.SignTransaction(mainClass.keyPair.getPrivate(), mainClass.getTransactionOutputStream(message.trans));
@@ -135,7 +161,10 @@ class Connection extends Thread {
            //System.out.println("th");
        }
        
-       // método que recebe o banco de dados distribuído.
+       /**
+        * método que recebe o banco de dados distribuído.
+        * @param message mensagem com o estado atual do sistema
+        */
        public void welcomeHandler(MessagePacket message){
            
            mainClass.ledger = message.ledger;
