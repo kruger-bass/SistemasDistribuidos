@@ -5,6 +5,10 @@
  */
 package turismo_servidor;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 /**
  *
  * @author kruger
@@ -16,6 +20,17 @@ public class Turismo_Servidor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        try{
+            int port = 2345;
+            Registry referenciaServicoNomes = LocateRegistry.createRegistry(port);
+            
+            ServidorServo interfaceServer = new ServidorServo();
+            
+            referenciaServicoNomes.rebind("server", interfaceServer);
+            
+        } catch(RemoteException e){
+            System.exit(0);
+        }
     }
     
 }
