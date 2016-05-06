@@ -13,7 +13,7 @@ import java.util.Date;
 public class Hospedagem {
     String cidade;
     String hotel;
-    Date entrada;
-    Date saida;
+    String entrada;
+    String saida;
     int quarto;
 }

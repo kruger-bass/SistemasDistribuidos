@@ -14,8 +14,7 @@ public class Passagem {
     boolean sohIda;
     String origem;
     String destino;
-    Date dataIda;
-    Date dataVolta;
+    String dataIda;
     int qtd;
     float preco;
 }
