@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package turismo_cliente;
+package turismo;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -23,15 +23,19 @@ public class Turismo_Cliente {
         // TODO code application logic here
         try{
             int port = 2345;
+            
             Registry referenciaServicoNomes = LocateRegistry.getRegistry("localhost", port);
             
             InterfaceServidor server = (InterfaceServidor)referenciaServicoNomes.lookup("server");
             
             ClienteServo interfaceCliente = new ClienteServo(server);
+            System.out.println("Iniciado");
             
         } catch(RemoteException e){
+            System.out.println(e);
             System.exit(0);
         } catch(NotBoundException e){
+            System.out.println(e);
             System.exit(0);
         }
     }
