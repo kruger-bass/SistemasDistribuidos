@@ -58,4 +58,36 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
             
         }
     }
+    
+    public void buscaPassagem (Passagem p)
+    {
+        
+    }
+    
+    public void buscaHospedagem (Hospedagem h)
+    {
+        
+    }
+    
+    public int compraPassagem(Passagem p)
+    {
+        
+        return ;
+    }
+    
+    public int compraHospedagem(Hospedagem h)
+    {
+        
+        return ;
+    }
+    
+    public void interessePassagem(Passagem p)
+    {
+        
+    }
+    
+    public void interesseHospedagem(Hospedagem h)
+    {
+        
+    }
 }

@@ -14,4 +14,9 @@ import java.rmi.server.UnicastRemoteObject;
 public class ClienteServo extends UnicastRemoteObject implements InterfaceCliente{
     
     public ClienteServo(InterfaceServidor server) throws RemoteException{}
+    
+    public void NotificaEvento(String evento) throws RemoteException
+    {
+        
+    }
 }
