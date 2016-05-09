@@ -16,4 +16,5 @@ public interface InterfaceServidor extends Remote{
     
     public HashMap ClientVerifyAirfare(String date) throws RemoteException;
     public String testConnection() throws RemoteException;
+    public void removeAirfare(Passagem p) throws RemoteException;
 }

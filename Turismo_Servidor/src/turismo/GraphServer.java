@@ -95,6 +95,11 @@ public class GraphServer extends javax.swing.JFrame {
         jLabel4.setText("Data de Ida:");
 
         Departure.setText("Curitba");
+        Departure.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DepartureActionPerformed(evt);
+            }
+        });
 
         year.setText("10");
 
@@ -229,6 +234,10 @@ public class GraphServer extends javax.swing.JFrame {
             Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_RemoveActionPerformed
+
+    private void DepartureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DepartureActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DepartureActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
