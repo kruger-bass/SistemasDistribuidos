@@ -41,6 +41,11 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
             
     }
     
+    public void buyAirfare(Passagem p) throws RemoteException{
+        System.out.println(p.qtd);
+        server.removeAirfare(p);
+    }
+    
     public void test() throws RemoteException{
             System.out.println(server.testConnection());
     }

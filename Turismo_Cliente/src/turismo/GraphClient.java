@@ -18,6 +18,7 @@ public class GraphClient extends javax.swing.JFrame {
      * Creates new form GraphClient
      */
     ClienteServo main;
+    Passagem p;
     
     public GraphClient(ClienteServo cs) {
         initComponents();
@@ -102,6 +103,13 @@ public class GraphClient extends javax.swing.JFrame {
 
         jLabel9.setText("/");
 
+        destinationVoo.setText("Tokyo");
+        destinationVoo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                destinationVooActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Hotéis");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -124,6 +132,7 @@ public class GraphClient extends javax.swing.JFrame {
 
         jLabel23.setText("Adultos:");
 
+        children.setText("0");
         children.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 childrenActionPerformed(evt);
@@ -142,6 +151,7 @@ public class GraphClient extends javax.swing.JFrame {
 
         anoVoltaVoo.setText("aaaa");
 
+        adults.setText("1");
         adults.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 adultsActionPerformed(evt);
@@ -213,6 +223,8 @@ public class GraphClient extends javax.swing.JFrame {
         anoIdaVoo.setText("10");
 
         jLabel17.setText("/");
+
+        departureVoo.setText("Curitiba");
 
         jLabel18.setText("/");
 
@@ -532,8 +544,19 @@ public class GraphClient extends javax.swing.JFrame {
     }//GEN-LAST:event_TestActionPerformed
 
     private void buyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buyActionPerformed
-        // TODO add your handling code here:
+        
+        p = new Passagem(departureVoo.getText(), destinationVoo.getText(), diaIdaVoo.getText(), mesIdaVoo.getText(), anoIdaVoo.getText(), (Integer.parseInt(adults.getText()) + Integer.parseInt(children.getText())), 1);
+        
+        try {
+            main.buyAirfare(p);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GraphClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_buyActionPerformed
+
+    private void destinationVooActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_destinationVooActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_destinationVooActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Test;

@@ -317,6 +317,12 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="destinationVoo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tokyo"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="destinationVooActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -383,6 +389,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="children">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="childrenActionPerformed"/>
       </Events>
@@ -408,6 +417,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="adults">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="1"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="adultsActionPerformed"/>
       </Events>
@@ -522,6 +534,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="departureVoo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Curitiba"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel18">
       <Properties>

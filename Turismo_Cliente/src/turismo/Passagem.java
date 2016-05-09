@@ -12,6 +12,7 @@ import java.util.Date;
  * @author Marmota
  */
 public class Passagem implements Serializable{
+    private static final long serialVersionUID = 6529685098267757690L;
     String origem;
     String destino;
     String diaIda;
