@@ -18,6 +18,7 @@ public class GraphServer extends javax.swing.JFrame {
      * Creates new form GraphServer
      */ServidorServo main;
     Passagem p;
+    Hospedagem h;
     
     public GraphServer(ServidorServo ss) {
         initComponents();
@@ -42,7 +43,7 @@ public class GraphServer extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         quantity = new javax.swing.JTextField();
         day = new javax.swing.JTextField();
-        Price = new javax.swing.JTextField();
+        price = new javax.swing.JTextField();
         Destination = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -51,6 +52,9 @@ public class GraphServer extends javax.swing.JFrame {
         month = new javax.swing.JTextField();
         verify = new javax.swing.JButton();
         Remove = new javax.swing.JButton();
+        makeLodging = new javax.swing.JButton();
+        removeLodging = new javax.swing.JButton();
+        verify2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,40 +65,25 @@ public class GraphServer extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Origem:");
+        jLabel1.setText("Origem/Cidade:");
 
         jLabel5.setText("Quantidade:");
 
-        jLabel2.setText("Destino:");
+        jLabel2.setText("Destino/Hotel:");
 
         quantity.setText("2");
 
         day.setText("10");
-        day.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dayActionPerformed(evt);
-            }
-        });
 
-        Price.setText("10");
-        Price.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PriceActionPerformed(evt);
-            }
-        });
+        price.setText("10");
 
         Destination.setText("Tokyo");
-        Destination.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DestinationActionPerformed(evt);
-            }
-        });
 
         jLabel3.setText("Preço:");
 
         jLabel4.setText("Data de Ida:");
 
-        Departure.setText("Curitba");
+        Departure.setText("Curitiba");
 
         year.setText("10");
 
@@ -114,6 +103,27 @@ public class GraphServer extends javax.swing.JFrame {
             }
         });
 
+        makeLodging.setText("Criar Hospadagem");
+        makeLodging.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makeLodgingActionPerformed(evt);
+            }
+        });
+
+        removeLodging.setText("Remover Hospedagem");
+        removeLodging.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLodgingActionPerformed(evt);
+            }
+        });
+
+        verify2.setText("Verify2");
+        verify2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verify2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,35 +132,40 @@ public class GraphServer extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(quantity))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(Departure)
-                                    .addComponent(Destination)
-                                    .addComponent(day, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(Price, javax.swing.GroupLayout.Alignment.TRAILING))))
-                        .addGap(18, 18, 18)
-                        .addComponent(month, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(year, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(124, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(Make)
                         .addGap(18, 18, 18)
                         .addComponent(Remove)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(verify)
-                        .addGap(19, 19, 19))))
+                        .addGap(19, 19, 19))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(makeLodging)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeLodging)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(verify2)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(Departure, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                                .addComponent(Destination)
+                                .addComponent(price, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(day, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(month, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(year, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -166,7 +181,7 @@ public class GraphServer extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(Price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -177,7 +192,12 @@ public class GraphServer extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(makeLodging)
+                    .addComponent(removeLodging)
+                    .addComponent(verify2))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Make)
                     .addComponent(verify)
@@ -190,27 +210,15 @@ public class GraphServer extends javax.swing.JFrame {
 
     private void MakeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MakeActionPerformed
 
-        System.out.println(Departure.getText() + Integer.parseInt(quantity.getText()) + Float.parseFloat(Price.getText()));
+        System.out.println(Departure.getText() + Integer.parseInt(quantity.getText()) + Float.parseFloat(price.getText()));
         
-        p = new Passagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(Price.getText()));
+        p = new Passagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(price.getText()));
         try {
             main.addAirfare(p);
         } catch (RemoteException ex) {
             Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_MakeActionPerformed
-
-    private void dayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dayActionPerformed
-
-    private void DestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DestinationActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_DestinationActionPerformed
-
-    private void PriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PriceActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_PriceActionPerformed
 
     private void verifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyActionPerformed
         try {
@@ -222,20 +230,47 @@ public class GraphServer extends javax.swing.JFrame {
 
     private void RemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveActionPerformed
         
-        p = new Passagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(Price.getText()));
+        p = new Passagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(price.getText()));
         try {
             main.removeAirfare(p);
         } catch (RemoteException ex) {
             Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_RemoveActionPerformed
+
+    private void verify2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verify2ActionPerformed
+        try {
+            main.verifyLodging(day.getText() + month.getText() + year.getText());
+        } catch (RemoteException ex) {
+            Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_verify2ActionPerformed
+
+    private void removeLodgingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLodgingActionPerformed
+        h = new Hospedagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), (Integer.parseInt(price.getText())));
+        try {
+            main.removeLodging(h);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_removeLodgingActionPerformed
+
+    private void makeLodgingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeLodgingActionPerformed
+        System.out.println(Departure.getText() + Integer.parseInt(quantity.getText()) + Float.parseFloat(price.getText()));
+        
+        h = new Hospedagem(Departure.getText(), Destination.getText(), day.getText(), month.getText(), year.getText(), day.getText(), month.getText(), year.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(price.getText()));
+        try {
+            main.addLodging(h);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GraphServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_makeLodgingActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Departure;
     private javax.swing.JTextField Destination;
     private javax.swing.JButton Make;
-    private javax.swing.JTextField Price;
     private javax.swing.JButton Remove;
     private javax.swing.JTextField day;
     private javax.swing.JLabel jLabel1;
@@ -243,9 +278,13 @@ public class GraphServer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton makeLodging;
     private javax.swing.JTextField month;
+    private javax.swing.JTextField price;
     private javax.swing.JTextField quantity;
+    private javax.swing.JButton removeLodging;
     private javax.swing.JButton verify;
+    private javax.swing.JButton verify2;
     private javax.swing.JTextField year;
     // End of variables declaration//GEN-END:variables
 }
