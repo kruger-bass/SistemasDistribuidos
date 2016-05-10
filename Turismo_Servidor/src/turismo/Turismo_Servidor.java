@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package turismo_servidor;
+package turismo;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -27,6 +27,7 @@ public class Turismo_Servidor {
             ServidorServo interfaceServer = new ServidorServo();
             
             referenciaServicoNomes.rebind("server", interfaceServer);
+            System.out.println("Iniciado");
             
         } catch(RemoteException e){
             System.exit(0);
