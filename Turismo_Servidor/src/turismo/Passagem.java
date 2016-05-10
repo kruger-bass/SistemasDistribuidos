@@ -18,8 +18,13 @@ public class Passagem implements Serializable{
     String diaIda;
     String mesIda;
     String anoIda;
+    String diaVolta;
+    String mesVolta;
+    String anoVolta;
     int qtd;
     int preco;
+    
+    long expiration;
 
     public Passagem(){}
     
@@ -33,8 +38,7 @@ public class Passagem implements Serializable{
         qtd = q;
         preco = p;
 }
-    
-    public void setPassagem(String o, String d, String di, String mi, String ai, int q, int p){
+    public Passagem(String o, String d, String di, String mi, String ai, int q, int p, long t){
         
         origem = o;
         destino = d;
@@ -43,5 +47,20 @@ public class Passagem implements Serializable{
         anoIda = ai;
         qtd = q;
         preco = p;
-    }
+        expiration = t;
+}
+    public Passagem(String o, String d, String di, String mi, String ai, String dv, String mv, String av, int q, int p){
+        
+        origem = o;
+        destino = d;
+        diaIda = di;
+        mesIda = mi;
+        anoIda = ai;
+        diaVolta = dv;
+        mesVolta = mv;
+        anoVolta = av;
+        qtd = q;
+        preco = p;
+}
+    
 }
