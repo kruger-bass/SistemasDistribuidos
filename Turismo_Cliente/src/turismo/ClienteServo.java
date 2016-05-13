@@ -39,8 +39,7 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @param date
      * @throws RemoteException 
      */
-    public void verifyAirfare(String date) throws RemoteException{
-        while(server.requestService()){}    
+    public void verifyAirfare(String date) throws RemoteException{   
         
         HashMap hash = server.ClientVerifyAirfare(date);
 
@@ -56,7 +55,6 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
                 System.out.println(aux.origem + ": " + aux.destino + " - " + aux.diaIda + "/" + aux.mesIda + "/" + aux.anoIda + ". Preço: " + aux.preco + ". Disp.:" + aux.qtd);
             }
         }
-        server.finishService();
     }
     /**
      * Check lodging for a given date. Ignores all other info, for search purposes.
@@ -64,8 +62,6 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @throws RemoteException 
      */
     public void verifyLodging(String date) throws RemoteException{
-        while(server.requestService()){}
-        
         HashMap hash = server.ClientVerifyLodging(date);
         if (hash == null){ // If no client whants to know about a airfare, do nothing!
             System.out.println("Nenhuma hospedagem encontrada para o dia selecionado");
@@ -79,7 +75,6 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
                 System.out.println(aux.cidade + ": " + aux.hotel + " - Entrada: " + aux.diaEntrada + "/" + aux.mesEntrada + "/" + aux.anoEntrada + " Saida: " + aux.diaSaida + "/" + aux.mesSaida + "/" + aux.anoSaida + ". Preço: " + aux.preco + ". Disp.:" + aux.quarto);
             }
         }
-        server.finishService();
     }
     /**
      * Buy an airfare. Checks idaEvolta and them buys one-way or round-trip.
@@ -104,6 +99,7 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
             p2.mesIda = p.mesVolta;
             p2.anoIda = p.anoVolta;
             p2.preco = volta;
+            p2.qtd = p.qtd;
             server.removeAirfare(p2);
         }else{
             System.out.println("Error: Airfare not found");
@@ -118,12 +114,12 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @throws RemoteException 
      */
     public void buyLodging(Hospedagem h) throws RemoteException{
-        while(server.requestService()){}
+        while(server.requestService2()){}
         
         System.out.println(h.quarto);
         server.removeLodging(h);
         
-        server.finishService();
+        server.finishService2();
     }
     
     public void test() throws RemoteException{
@@ -142,12 +138,10 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @throws RemoteException 
      */
     public void registerInterest(Passagem p) throws RemoteException {
-        while(server.requestService()){}
-        
+                
         server.registerNotification(p, this);
         System.out.println("ok1");
         
-        server.finishService();
     }
     
     /**
@@ -156,12 +150,10 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @throws RemoteException 
      */
     public void registerInterest(Hospedagem h) throws RemoteException {
-        while(server.requestService()){}
         
         server.registerNotification(h, this);
         System.out.println("ok2");
         
-        server.finishService();
     }
     
 }

@@ -29,7 +29,8 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
     int counter3 = 0;
     int counter4 = 0;
     
-    boolean inUse = false;
+    boolean inUseP = false;
+    boolean inUseH = false;
     
     GraphServer gui;
     
@@ -351,10 +352,23 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
      */
     public boolean requestService() throws RemoteException{
         
-        if(inUse){
+        if(inUseP){
             return false;
         } else{
-            inUse = true;
+            inUseP = true;
+            return true;
+        }
+    }
+    
+        /**
+     * Server access control. blocks concurrent access to server methods.
+     */
+    public boolean requestService2() throws RemoteException{
+        
+        if(inUseH){
+            return false;
+        } else{
+            inUseH = true;
             return true;
         }
     }
@@ -365,7 +379,17 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
      */
     public void finishService() throws RemoteException{
         
-        inUse = false;
+        inUseP = false;
+    }
+    
+    
+    @Override
+    /**
+     * Server access control release. Releases the server to other users.
+     */
+    public void finishService2() throws RemoteException{
+        
+        inUseH = false;
     }
     
     /**
@@ -390,7 +414,7 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                             
                             if(aux.origem.equals(p.origem)
                                 && aux.destino.equals(p.destino)
-                                && aux.qtd>0){
+                                && aux.qtd>= p.qtd){
                                 
                                 existeIda = true;
                             }
@@ -405,9 +429,9 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                             Passagem aux = (Passagem)pair.getValue();
                             System.out.println(aux.origem + ": " + aux.qtd);
                             
-                            if(aux.origem.equals(p.origem)
-                                && aux.destino.equals(p.destino)
-                                && aux.qtd>0){
+                            if(aux.origem.equals(p.destino)
+                                && aux.destino.equals(p.origem)
+                                && aux.qtd>=p.qtd){
                                 
                                 existeVolta = true;
                             }

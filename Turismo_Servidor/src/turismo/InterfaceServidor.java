@@ -23,5 +23,7 @@ public interface InterfaceServidor extends Remote{
     public void registerNotification(Hospedagem h, InterfaceCliente client) throws RemoteException;
     public boolean requestService() throws RemoteException;
     public void finishService() throws RemoteException;
+    public boolean requestService2() throws RemoteException;
+    public void finishService2() throws RemoteException;
     public boolean checkIdaEVolta(Passagem p) throws RemoteException;
 }
