@@ -40,9 +40,7 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
      */
     public ServidorServo() throws RemoteException{
     
-        System.out.println("debug1");
         gui = new GraphServer(this);
-        System.out.println("debug2");
         
     }
     
@@ -215,7 +213,6 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
      * Remote method. Returns a hashmap with airfares that looks alike the ones requested (from, to, date...)
      */
     public HashMap ClientVerifyAirfare(String date) throws RemoteException{
-        System.out.println(date);
         return airfareDateMap.get(date);
     }
     
@@ -224,7 +221,6 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
      * Remote method. Returns a hashmap with lodging that looks alike the ones requested (city, hotel, date...)
      */
     public HashMap ClientVerifyLodging(String date) throws RemoteException{
-        System.out.println(date);
         return lodgingDateMap.get(date);
     }
     
@@ -247,13 +243,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
             HashMap<Passagem, InterfaceCliente> airfareClientList = new HashMap<Passagem, InterfaceCliente>();
             airfareClientList.put(p, client);
             airfareInterestMap.put((p.diaIda + p.mesIda + p.anoIda), airfareClientList);
-            System.out.println("regp");
             
         } else{
             
             HashMap<Passagem, InterfaceCliente> airfareClientList = airfareInterestMap.get((p.diaIda + p.mesIda + p.anoIda));
             airfareClientList.put(p, client);
-            System.out.println("regp2");
             
         }
     }
@@ -269,13 +263,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
             HashMap<Hospedagem, InterfaceCliente> lodgingClientList = new HashMap<Hospedagem, InterfaceCliente>();
             lodgingClientList.put(h, client);
             lodgingInterestMap.put(h.entrada, lodgingClientList);
-            System.out.println("regl");
             
         } else{
             
             HashMap<Hospedagem, InterfaceCliente> lodgingClientList = lodgingInterestMap.get(h.entrada);
             lodgingClientList.put(h, client);
-            System.out.println("regl2");
             
         }
         
@@ -298,9 +290,7 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             Passagem aux = (Passagem)pair.getKey();
-                            System.out.println(aux.origem + ": " + aux.destino);
                             
-                            System.out.println(p.preco +":" + aux.preco);
                             if(p.origem.equals(aux.origem)
                             && p.destino.equals(aux.destino)
                             && p.preco<aux.preco
@@ -331,9 +321,7 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             Hospedagem aux = (Hospedagem)pair.getKey();
-                            System.out.println(aux.cidade + ": " + aux.hotel);
                             
-                            System.out.println(h.preco +":" + aux.preco);
                             if(h.cidade.equals(aux.cidade)
                             && h.hotel.equals(aux.hotel)
                             && h.preco<aux.preco
@@ -410,7 +398,6 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             Passagem aux = (Passagem)pair.getValue();
-                            System.out.println(aux.origem + ": " + aux.qtd);
                             
                             if(aux.origem.equals(p.origem)
                                 && aux.destino.equals(p.destino)
@@ -427,7 +414,6 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             Passagem aux = (Passagem)pair.getValue();
-                            System.out.println(aux.origem + ": " + aux.qtd);
                             
                             if(aux.origem.equals(p.destino)
                                 && aux.destino.equals(p.origem)

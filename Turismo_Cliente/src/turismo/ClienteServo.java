@@ -29,7 +29,6 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      * @throws RemoteException 
      */
     public ClienteServo(InterfaceServidor server) throws RemoteException{
-        System.out.println("debug");
         gui = new GraphClient(this);
         this.server = server;
     }
@@ -87,10 +86,8 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         while(server.requestService()){}
         
         if(!idaEvolta){
-            System.out.println(p.qtd);
             server.removeAirfare(p);
         } else if(server.checkIdaEVolta(p)){
-            System.out.println("debugdebug");
             server.removeAirfare(p);
             Passagem p2 = new Passagem();
             p2.origem = p.destino;
@@ -104,7 +101,6 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         }else{
             System.out.println("Error: Airfare not found");
         }
-        System.out.println("chegou no final");
         server.finishService();
     }
     
@@ -122,10 +118,19 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         server.finishService2();
     }
     
+    /**
+     * Connection tester
+     * @throws RemoteException 
+     */
     public void test() throws RemoteException{
             System.out.println(server.testConnection());
     }
     
+    /**
+     * Notification printer
+     * @param s
+     * @throws RemoteException 
+     */
     @Override
     public void printer(String s) throws RemoteException{
         
@@ -139,9 +144,7 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      */
     public void registerInterest(Passagem p) throws RemoteException {
                 
-        server.registerNotification(p, this);
-        System.out.println("ok1");
-        
+        server.registerNotification(p, this);        
     }
     
     /**
@@ -151,9 +154,7 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
      */
     public void registerInterest(Hospedagem h) throws RemoteException {
         
-        server.registerNotification(h, this);
-        System.out.println("ok2");
-        
+        server.registerNotification(h, this);        
     }
     
 }
