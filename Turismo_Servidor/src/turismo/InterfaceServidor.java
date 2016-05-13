@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 
 /**
- *
+ * Server RMI interface
  * @author Marmota
  */
 public interface InterfaceServidor extends Remote{

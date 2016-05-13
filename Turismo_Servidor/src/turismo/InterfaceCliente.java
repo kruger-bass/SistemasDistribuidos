@@ -8,7 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Client RMI interface
  * @author Marmota
  */
 public interface InterfaceCliente extends Remote{

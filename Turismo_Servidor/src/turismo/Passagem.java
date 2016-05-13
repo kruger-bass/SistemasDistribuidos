@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * Class that represents an Airfare option
  * @author Marmota
  */
 public class Passagem implements Serializable{

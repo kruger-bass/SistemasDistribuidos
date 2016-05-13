@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Client's remote object
  * @author Marmota
  */
 public class ClienteServo extends UnicastRemoteObject implements InterfaceCliente{
@@ -23,43 +23,71 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
     HashMap<String, Passagem> airfareList = new HashMap<String, Passagem>();
     HashMap<String, Hospedagem> lodgingList = new HashMap<String, Hospedagem>();
     
+    /**
+     * Object constructor
+     * @param server - the remote server with whom it communicates
+     * @throws RemoteException 
+     */
     public ClienteServo(InterfaceServidor server) throws RemoteException{
         System.out.println("debug");
         gui = new GraphClient(this);
         this.server = server;
     }
     
+    /**
+     * Check airfare for a given date. Ignores all other info, for search purposes.
+     * @param date
+     * @throws RemoteException 
+     */
     public void verifyAirfare(String date) throws RemoteException{
         while(server.requestService()){}    
         
-        airfareList = new HashMap<String, Passagem>(server.ClientVerifyAirfare(date));
-            
+        HashMap hash = server.ClientVerifyAirfare(date);
+
+        if (hash == null){ // If no client whants to know about a airfare, do nothing!
+            System.out.println("Nenhuma passagem encontrada para o dia selecionado");
+        }
+        else{
+        airfareList = new HashMap<String, Passagem>(hash);
         Iterator it = airfareList.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 Passagem aux = (Passagem)pair.getValue();
                 System.out.println(aux.origem + ": " + aux.destino + " - " + aux.diaIda + "/" + aux.mesIda + "/" + aux.anoIda + ". Preço: " + aux.preco + ". Disp.:" + aux.qtd);
             }
-       
-            server.finishService();
-            
+        }
+        server.finishService();
     }
-    
+    /**
+     * Check lodging for a given date. Ignores all other info, for search purposes.
+     * @param date
+     * @throws RemoteException 
+     */
     public void verifyLodging(String date) throws RemoteException{
         while(server.requestService()){}
-            
-        lodgingList = new HashMap<String, Hospedagem>(server.ClientVerifyLodging(date));
-            
+        
+        HashMap hash = server.ClientVerifyLodging(date);
+        if (hash == null){ // If no client whants to know about a airfare, do nothing!
+            System.out.println("Nenhuma hospedagem encontrada para o dia selecionado");
+        }
+        else{
+        lodgingList = new HashMap<String, Hospedagem>(hash);
         Iterator it = lodgingList.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
                 Hospedagem aux = (Hospedagem)pair.getValue();
                 System.out.println(aux.cidade + ": " + aux.hotel + " - Entrada: " + aux.diaEntrada + "/" + aux.mesEntrada + "/" + aux.anoEntrada + " Saida: " + aux.diaSaida + "/" + aux.mesSaida + "/" + aux.anoSaida + ". Preço: " + aux.preco + ". Disp.:" + aux.quarto);
             }
-            
+        }
         server.finishService();
     }
-    
+    /**
+     * Buy an airfare. Checks idaEvolta and them buys one-way or round-trip.
+     * @param p
+     * @param idaEvolta
+     * @param volta
+     * @throws RemoteException 
+     */
     public void buyAirfare(Passagem p, boolean idaEvolta, int volta) throws RemoteException{
         while(server.requestService()){}
         
@@ -84,6 +112,11 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         server.finishService();
     }
     
+    /**
+     * Buy an lodging option.
+     * @param h
+     * @throws RemoteException 
+     */
     public void buyLodging(Hospedagem h) throws RemoteException{
         while(server.requestService()){}
         
@@ -103,6 +136,11 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         System.out.println(s);
     }
     
+    /**
+     * Register interest for a kind of airfare. When an update for that airfare happens, the server informs the client.
+     * @param p
+     * @throws RemoteException 
+     */
     public void registerInterest(Passagem p) throws RemoteException {
         while(server.requestService()){}
         
@@ -112,6 +150,11 @@ public class ClienteServo extends UnicastRemoteObject implements InterfaceClient
         server.finishService();
     }
     
+    /**
+     * Register interest for a kind of lodging. When an update for that lodginghappens, the server informs the client.
+     * @param h
+     * @throws RemoteException 
+     */
     public void registerInterest(Hospedagem h) throws RemoteException {
         while(server.requestService()){}
         

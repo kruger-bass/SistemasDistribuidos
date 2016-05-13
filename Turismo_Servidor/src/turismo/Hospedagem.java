@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * Class that represents a lodging option.
  * @author Marmota
  */
 public class Hospedagem implements Serializable{

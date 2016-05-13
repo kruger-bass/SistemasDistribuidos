@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
+ * Server's Remote Object
  * @author Marmota
  */
 public class ServidorServo extends UnicastRemoteObject implements InterfaceServidor{
@@ -33,6 +33,10 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
     
     GraphServer gui;
     
+    /**
+     * Object constructor
+     * @throws RemoteException 
+     */
     public ServidorServo() throws RemoteException{
     
         System.out.println("debug1");
@@ -41,7 +45,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         
     }
     
-    
+    /**
+     * Add airfare method. 
+     * @param p an airfare
+     * @throws RemoteException 
+     */
     public void addAirfare(Passagem p) throws RemoteException{
     
         if(airfareDateMap.get((p.diaIda + p.mesIda + p.anoIda)) == null){
@@ -62,6 +70,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         checkNotification(p);
     }
         
+    /**
+     * add Lodging option
+     * @param h a lodging
+     * @throws RemoteException 
+     */
     public void addLodging(Hospedagem h) throws RemoteException{
     
         if(lodgingDateMap.get(h.entrada) == null){
@@ -82,6 +95,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         checkNotification(h);
     }
 
+    /**
+     * Remove Airfare method, called when an airfare is bought.
+     * @param p
+     * @throws RemoteException 
+     */
     public void removeAirfare(Passagem p) throws RemoteException{
         
         if(airfareDateMap.get((p.diaIda + p.mesIda + p.anoIda)) == null){
@@ -101,9 +119,9 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                             if(aux.origem.equals(p.origem)
                                 && aux.destino.equals(p.destino)
                                 && aux.preco == p.preco
-                                && aux.qtd>0){
+                                && aux.qtd >= p.qtd){
                             
-                                aux.qtd = aux.qtd - 1;
+                                aux.qtd -= p.qtd;
                                 System.out.println("Removida Passagem");
                                 removed = true;
                                 break;
@@ -117,7 +135,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         
     }
     
-    @Override
+    /**
+     * remove Lodging method. Called when a lodge is bought
+     * @param h
+     * @throws RemoteException 
+     */
     public void removeLodging(Hospedagem h) throws RemoteException{
         
         if(lodgingDateMap.get((h.entrada)) == null){
@@ -137,9 +159,9 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                             if(aux.cidade.equals(h.cidade)
                                 && aux.hotel.equals(h.hotel)
                                 && aux.preco == h.preco
-                                && aux.quarto>0){
+                                && aux.quarto>= h.quarto){
                             
-                                aux.quarto = aux.quarto - 1;
+                                aux.quarto -= h.quarto;
                                 System.out.println("Removida Hospedagem");
                                 removed = true;
                                 break;
@@ -153,6 +175,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         
     }
     
+    /**
+     * server method that checks available airfares
+     * @param date
+     * @throws RemoteException 
+     */
     public void verify(String date) throws RemoteException{
         
         HashMap<String, Passagem> airfareList = airfareDateMap.get(date);
@@ -165,6 +192,11 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                         }
     }
     
+    /**
+     * Server method that checks available lodging
+     * @param date
+     * @throws RemoteException 
+     */
     public void verifyLodging(String date) throws RemoteException{
     
         HashMap<String, Hospedagem> lodgingList = lodgingDateMap.get(date);
@@ -178,23 +210,35 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
     }
     
     @Override
+    /**
+     * Remote method. Returns a hashmap with airfares that looks alike the ones requested (from, to, date...)
+     */
     public HashMap ClientVerifyAirfare(String date) throws RemoteException{
         System.out.println(date);
         return airfareDateMap.get(date);
     }
     
     @Override
+    /**
+     * Remote method. Returns a hashmap with lodging that looks alike the ones requested (city, hotel, date...)
+     */
     public HashMap ClientVerifyLodging(String date) throws RemoteException{
         System.out.println(date);
         return lodgingDateMap.get(date);
     }
     
     @Override
+    /**
+     * Connection tester
+     */
     public String testConnection() throws RemoteException {
         return "Bom Dia";
     }
     
     @Override
+    /**
+     * RMI method that register a client interest in an airfare
+     */
     public void registerNotification(Passagem p, InterfaceCliente client) throws RemoteException {
         
         if(airfareInterestMap.get((p.diaIda + p.mesIda + p.anoIda)) == null){
@@ -214,6 +258,9 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
     }
     
     @Override
+    /**
+     * RMI method that register a client interest in a lodging
+     */
     public void registerNotification(Hospedagem h, InterfaceCliente client) throws RemoteException {
     
         if(lodgingInterestMap.get(h.entrada) == null){
@@ -233,10 +280,19 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
         
     }
     
+    /**
+     * Server method that checks if someone whants to be notified about an airfare
+     * @param p
+     * @throws RemoteException 
+     */
     public void checkNotification(Passagem p) throws RemoteException{
         
         HashMap<Passagem, InterfaceCliente> airfareClientList = airfareInterestMap.get((p.diaIda + p.mesIda + p.anoIda));
         
+        if (airfareClientList == null){ // If no client whants to know about a airfare, do nothing!
+            
+        }
+        else {    
         Iterator it = airfareClientList.entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
@@ -253,13 +309,23 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                                 c.printer("Existe a passagem requisitada por um preço melhor!");
                             }
                         }
+        }
         
     }
     
+    /**
+     * Server method that checks if someone whants to be notified about a lodging
+     * @param h
+     * @throws RemoteException 
+     */
     public void checkNotification(Hospedagem h) throws RemoteException{
         
         HashMap<Hospedagem, InterfaceCliente> lodgingClientList = lodgingInterestMap.get((h.entrada));
         
+        if (lodgingClientList == null){ // If no client whants to know about a lodging, do nothing!
+            
+        }
+        else {    
         Iterator it = lodgingClientList.entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
@@ -276,10 +342,13 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
                                 c.printer("Existe a hospedagem requisitada por um preço melhor!");
                             }
                         }
-        
+        }
     }
 
     @Override
+    /**
+     * Server access control. blocks concurrent access to server methods.
+     */
     public boolean requestService() throws RemoteException{
         
         if(inUse){
@@ -291,11 +360,20 @@ public class ServidorServo extends UnicastRemoteObject implements InterfaceServi
     }
     
     @Override
+    /**
+     * Server access control release. Releases the server to other users.
+     */
     public void finishService() throws RemoteException{
         
         inUse = false;
     }
     
+    /**
+     * Roundtrip method. used when a roundtrip airfare is requested, to check availability both ways
+     * @param p
+     * @return
+     * @throws RemoteException 
+     */
     @Override
     public boolean checkIdaEVolta(Passagem p) throws RemoteException{
     

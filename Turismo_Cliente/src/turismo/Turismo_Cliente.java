@@ -11,12 +11,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- *
+ * Client main class
  * @author kruger
  */
 public class Turismo_Cliente {
 
     /**
+     * Client main. Register the client on RMi nameService and check if there's a server online.
      * @param args the command line arguments
      */
     public static void main(String[] args){

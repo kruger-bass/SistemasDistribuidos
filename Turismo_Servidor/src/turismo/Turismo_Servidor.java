@@ -10,12 +10,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- *
+ * Server main class
  * @author kruger
  */
 public class Turismo_Servidor {
 
     /**
+     * Server main. Creates the nameService for RMI and launches the server.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
