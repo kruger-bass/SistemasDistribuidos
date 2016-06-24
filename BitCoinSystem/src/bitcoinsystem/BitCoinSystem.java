@@ -1,7 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * TODO: 
+    Salvar estado das transações no Log
+    Estado das transações: 
+        Efetivação provisṍria - na Waiting List
+        Efetivada - Na lista confirmada
+        Abortada - Em nenhuma lista
+    Mineirador deve:
+        Pegar um token do usuário que ele está validando a transação
+        Verificar se tem saldo
+            Se nao tiver, aborta a transação
  */
 package bitcoinsystem;
 
@@ -76,7 +83,6 @@ public class BitCoinSystem {
     int transactionCounter; // used to make transaction ID's
     int userCounter = 0;
     KeyPair keyPair = null;
-    boolean receivedSignal = false;
     boolean applicationStarted = false;
     
     /**
