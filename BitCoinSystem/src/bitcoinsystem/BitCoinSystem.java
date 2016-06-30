@@ -89,14 +89,16 @@ public class BitCoinSystem {
      */
     public BitCoinSystem(){
         // Estado inicial.
-        transactionCounter = 0;
+        logManager = new LogManager(this);
         System.out.println("Digite a porta unicast que deseja usar: ");
         port = scan.nextInt();
-        System.out.println("Digite qual o preço do seu produto: ");
-        price = scan.nextInt();
-        keyPair = GenSig.ultra3000KeyPairGenerator();
-        wallet = 100;
-        logManager = new LogManager(this);
+        if (!logManager.loadLog()){
+            transactionCounter = 0;
+            System.out.println("Digite qual o preço do seu produto: ");
+            price = scan.nextInt();
+            keyPair = GenSig.ultra3000KeyPairGenerator();
+            wallet = 100;
+        }
         
         //Inícialização da comunicação
         try

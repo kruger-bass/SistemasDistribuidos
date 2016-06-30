@@ -175,7 +175,12 @@ class Connection extends Thread {
         */
        public void welcomeHandler(MessagePacket message){
            
-           mainClass.ledger = message.ledger;
+           mainClass.ledger.transactionAbortedList = message.ledger.transactionAbortedList;
+           mainClass.ledger.transactionList = message.ledger.transactionList;
+           mainClass.ledger.userList = message.ledger.userList;
+           if (mainClass.ledger.transactionWaitingList == null)
+               mainClass.ledger.transactionWaitingList = message.ledger.transactionWaitingList;
+           
            System.out.println("recebido boas-vindas");
        }
 }

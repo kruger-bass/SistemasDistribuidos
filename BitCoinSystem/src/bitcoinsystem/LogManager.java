@@ -44,22 +44,29 @@ public class LogManager {
         }
     }
     
-    public void loadLog(){
-        
+    public boolean loadLog(){
+        boolean ret = false;
         Log loadedLog = null;
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         
         try{// cria os inputs para lerem os arquivos externos criados pelos outputs
-                fis = new FileInputStream("sav1.marmota");
+                fis = new FileInputStream(mainClass.port + ".bit");
                 ois = new ObjectInputStream(fis);
                 loadedLog = (Log)ois.readObject();
                 ois.close();
                 fis.close();
                 System.out.println("Seu jogo foi carregado com sucesso!");
+                mainClass.price = loadedLog.price;
+                mainClass.wallet = loadedLog.wallet;
+                mainClass.transactionCounter = loadedLog.transactionCounter;
+                mainClass.keyPair = loadedLog.keys;
+                mainClass.ledger.transactionWaitingList = loadedLog.transactionWaitingList;
+                ret = true;
         }
         catch(Exception e){
                 System.out.println("WARNING! Falha ao carregar arquivo");
         }
+        return ret;
     }
 }
