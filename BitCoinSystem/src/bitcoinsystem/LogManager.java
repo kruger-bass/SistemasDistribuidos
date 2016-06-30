@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.KeyPair;
+import java.util.HashMap;
 
 /**
  *
@@ -15,20 +17,27 @@ import java.io.ObjectOutputStream;
  */
 public class LogManager {
     
-    public void saveLog(Log l){
+    BitCoinSystem mainClass;
+    
+    public LogManager(BitCoinSystem btc){
+        this.mainClass = btc;
+    }
+    
+    public void saveLog(){
         Object obj = new Object();
         FileOutputStream fos;
         ObjectOutputStream oos;
+        Log l = new Log(mainClass.port, mainClass.price, mainClass.wallet, mainClass.transactionCounter, mainClass.keyPair, mainClass.ledger.transactionWaitingList);
         
         try{//cria o file output e object output para salvar o jogo em um arquivo externo
-            fos = new FileOutputStream("sav1.marmota");
+            fos = new FileOutputStream(mainClass.port + ".bit");
             oos = new ObjectOutputStream(fos);
             obj = (Object)l;
             oos.writeObject(obj);
             oos.flush();
             oos.close();
             fos.close();
-            System.out.println("Seu jogo foi salvo com sucesso!");
+            System.out.println("Log salvo com sucesso!");
         }
         catch(Exception e){
             System.out.println("WARNING! Falha ao salvar arquivo" + e);

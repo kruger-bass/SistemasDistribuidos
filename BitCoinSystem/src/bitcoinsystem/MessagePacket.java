@@ -49,7 +49,7 @@ public class MessagePacket implements Serializable{
     }
     
     /**
-     * Construtor da Transaction Start message 
+     * Construtor da Transaction Start, validate e abort message
      * @param mid
      * @param t
      * @param tid 

@@ -1,14 +1,11 @@
 /*
  * TODO: 
-    Salvar estado das transações no Log
-    Estado das transações: 
-        Efetivação provisṍria - na Waiting List
-        Efetivada - Na lista confirmada
-        Abortada - Em nenhuma lista
+    Comprador deve salvar o log quando recebe a transação assinada pelo vendedor
+    Comprador deve salvar o log quando recebe a transação validada pelo mineirador
+    bitcoinSystem deve salvar o log quando recebe uma transação confirmada e é mineirador, vendedor ou comprador.
+    BitcoinSystem deve carregar seu log toda vez que retorna ao sistema
     Mineirador deve:
         Pegar um token do usuário que ele está validando a transação
-        Verificar se tem saldo
-            Se nao tiver, aborta a transação
  */
 package bitcoinsystem;
 
@@ -52,9 +49,10 @@ public class BitCoinSystem {
     public static final int REQUESTTRANSACTION = 104;
     public static final int TRANSACTION = 105;
     public static final int TRANSACTIONTOCONFIRM = 106;
+    public static final int ABORT = 107;
     public static final int REWARDPORT = 6789;
-    public static final int REWARDVALUE = 1;
-    public static final int EXTRAREWARD = 1;
+    public static final int REWARDVALUE = 1; // recompensa padrão de mineiração
+    public static final int EXTRAREWARD = 1; // recompensa extra paga pelo comprador
     
     // variáveis de rede
     int port;
@@ -84,6 +82,7 @@ public class BitCoinSystem {
     int userCounter = 0;
     KeyPair keyPair = null;
     boolean applicationStarted = false;
+    LogManager logManager = null;
     
     /**
      * Construtor que inicializa o usuário de bitcoins
@@ -97,6 +96,7 @@ public class BitCoinSystem {
         price = scan.nextInt();
         keyPair = GenSig.ultra3000KeyPairGenerator();
         wallet = 100;
+        logManager = new LogManager(this);
         
         //Inícialização da comunicação
         try
@@ -164,13 +164,17 @@ public class BitCoinSystem {
             //System.out.println("dbug validate");
             MessagePacket packet = ledger.transactionWaitingList.get(transID);
             PublicKey pubK = ledger.userList.get(packet.trans.senderPort).publicKey;
-            ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID);
-            
-            time = System.currentTimeMillis();
-            reward = new Transaction(REWARDPORT, port, REWARDVALUE, time);
-            outPacket = new MessagePacket(VALIDATE, reward, transID);
-            
-            sendMulticast(outPacket);
+            if (ledger.confirmTransaction(getTransactionOutputStream(packet.trans), packet.signature, pubK, transID))
+            {
+                time = System.currentTimeMillis();
+                reward = new Transaction(REWARDPORT, port, REWARDVALUE, time);
+                outPacket = new MessagePacket(VALIDATE, reward, transID);
+            }
+            else
+            {
+                outPacket = new MessagePacket(ABORT, packet.trans, transID);
+            }
+            sendUnicast(packet.trans.receiverPort, outPacket);
         }
     }
     

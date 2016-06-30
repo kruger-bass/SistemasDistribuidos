@@ -119,6 +119,14 @@ class Connection extends Thread {
                          
                          welcomeHandler(inPacket);
                          
+                     } else if(inPacket.messageID == mainClass.VALIDATE){
+                         
+                         mainClass.sendMulticast(inPacket);
+                        
+                     } else if (inPacket.messageID == mainClass.ABORT){
+                         
+                         mainClass.sendMulticast(inPacket);
+                         
                      }
                      
 		}catch (EOFException e){System.out.println("EOF:"+e.getMessage());

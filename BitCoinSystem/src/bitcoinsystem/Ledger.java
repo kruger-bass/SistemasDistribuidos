@@ -22,6 +22,9 @@ public class Ledger implements Serializable{
      //transaction ID, and pacote with all info on transaction
      HashMap<Integer, MessagePacket> transactionWaitingList = new HashMap<Integer, MessagePacket>();
      
+     //transaction ID, and pacote with all info on transaction
+     HashMap<Integer, MessagePacket> transactionAbortedList = new HashMap<Integer, MessagePacket>();
+     
      //portID, message packet
      HashMap<Integer, MessagePacket> userList = new HashMap<Integer, MessagePacket>();
      
@@ -38,7 +41,7 @@ public class Ledger implements Serializable{
       * @param pk Chave pública de quem pagou em bitcoins
       * @param transID 
       */
-     public void confirmTransaction(byte[] data, byte[] signature, PublicKey pk, int transID){
+     public boolean confirmTransaction(byte[] data, byte[] signature, PublicKey pk, int transID){
          boolean verified = GenSig.VerifySignature(data, signature, pk);
          if(verified){
             //transactionList.put(transID, transactionWaitingList.get(transID));
@@ -46,6 +49,7 @@ public class Ledger implements Serializable{
          } else{
              System.out.println("Error: ConfirmTransaction");
          }
+         return verified;
      }
      
      /**
@@ -55,6 +59,16 @@ public class Ledger implements Serializable{
      public void transactionConfirmed(int transID){
          
          transactionList.put(transID, transactionWaitingList.get(transID));
+         transactionWaitingList.remove(transID);
+     }
+     
+     /**
+      * Método que tira uma mensagem da lista de transações a confirmar e coloca na de transações abortadas
+      * @param transID 
+      */
+     public void transactionAborted(int transID){
+         
+         transactionAbortedList.put(transID, transactionWaitingList.get(transID));
          transactionWaitingList.remove(transID);
      }
      

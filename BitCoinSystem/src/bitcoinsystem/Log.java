@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.security.KeyPair;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *
@@ -21,10 +22,17 @@ public class Log implements Serializable{
     int transactionCounter; // numero de transações abertas
     KeyPair keys; // chaves pública e privada
     Calendar lastSeenON; // instant of last log
+    HashMap<Integer, MessagePacket> transactionWaitingList;
     
+    public Log(int port, int price, int wallet, int transactionCounter, KeyPair keypair, HashMap<Integer, MessagePacket> transactionWaitingList)
+    {
+        this.port = port;
+        this.price = price;
+        this.wallet = wallet;
+        this.transactionCounter = transactionCounter;
+        this.keys = keypair;
+        this.lastSeenON = Calendar.getInstance();
+        this.transactionWaitingList = transactionWaitingList;
+    }
     
-    //Valores da propria carteira
-    //Sua identificação
-    //data e hora
-    //operações realizadas dentro da transação
 }

@@ -81,6 +81,10 @@ public class MulticastListener extends Thread{
                                     
                                     validateHandler(inPacket);
 
+                                } else if(inPacket.messageID == mainClass.ABORT){
+                                    
+                                    abortTransactionHandler(inPacket);
+                                    
                                 }
                             
                         }
@@ -124,13 +128,14 @@ public class MulticastListener extends Thread{
        }
        
        /**
-        * Manipula mensagem de transação
+        * Manipula mensagem de transação a confirmar
         * @param message 
         */
        public void confirmTransactionHandler(MessagePacket message){
            
            //System.out.println("transIDID:" + message.transID);
            mainClass.ledger.addTransaction(message.transID, message);
+           mainClass.logManager.saveLog();
            
        }
        
@@ -147,18 +152,30 @@ public class MulticastListener extends Thread{
            Transaction aux = mainClass.ledger.transactionList.get(message.transID).trans;
            System.out.println(aux.receiverPort);
            System.out.println(aux.senderPort);
-           if(aux.receiverPort == mainClass.port){
+           if(aux.receiverPort == mainClass.port){ // Sou o cara que recebe bitcoins! O Comprador!
                mainClass.wallet += aux.value;
                mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
-           } else if(aux.senderPort == mainClass.port){
+           } else if(aux.senderPort == mainClass.port){ // Sou o cara que entrega bitcoins! O Vendedor!
                mainClass.wallet -= aux.value; 
                mainClass.wallet -= mainClass.EXTRAREWARD;
                mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
            } 
-           if(message.trans.receiverPort == mainClass.port){
+           if(message.trans.receiverPort == mainClass.port){ // Sou o minerador e quero minha recompensa!
                mainClass.wallet += message.trans.value;
                mainClass.wallet += mainClass.EXTRAREWARD;
                mainClass.gui.setBitcoinAmountLabel(mainClass.wallet);
            }
+           mainClass.logManager.saveLog();
+       }
+       
+       /**
+        * Manipula mensagem de abortar transação
+        * @param message 
+        */
+       public void abortTransactionHandler(MessagePacket message){
+           
+           //System.out.println("transIDID:" + message.transID);
+           mainClass.ledger.transactionAborted(message.transID);
+           mainClass.logManager.saveLog();
        }
 }
